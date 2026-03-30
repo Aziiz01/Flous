@@ -14,7 +14,7 @@ All project code, assets, and documentation in this repository were created by M
 
 ## Features
 
-- **Amount & denomination** — Enter a TND amount and pick a note denomination (bill count is computed from the amount).
+- **Amount & denomination** — Enter a TND amount and pick a note denomination (bill count is computed from the amount). On first load with no `amount` query parameter, the field starts at **1,000,000** TND with the **20 TND** note selected.
 - **3D stacking** — Three.js scene with bill stacks, falling-bill animation, and orbit controls after the run finishes.
 - **Large amounts** — Very high bill counts switch to an instant “turbo” fill so the experience stays responsive (threshold is configurable in `src/config/sceneConfig.js`).
 - **Skip waiting** — Optional control to finish the animation immediately and show full stacks.
