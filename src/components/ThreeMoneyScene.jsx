@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 const MAX_RENDER_STACKS = 2800
 const STACK_BILL_CAPACITY = 100
 const BASE_STACK_HEIGHT = 1.15
-const MAX_ACTIVE_FALLING = 2800
+const MAX_ACTIVE_FALLING = 4500
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
 const raycaster = new THREE.Raycaster()
@@ -261,7 +261,7 @@ const createStackLabelSprite = (label) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.fillStyle = 'rgba(4, 8, 10, 0.72)'
   ctx.fillRect(20, 20, canvas.width - 40, canvas.height - 40)
-  ctx.strokeStyle = 'rgba(250, 204, 21, 0.7)'
+  ctx.strokeStyle = 'rgba(232, 207, 106, 0.75)'
   ctx.lineWidth = 4
   ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40)
   ctx.fillStyle = '#fef3c7'
@@ -345,11 +345,12 @@ const createFallingBillMesh = (billMaterials) => {
 
 const getStackTopY = (stack) => stack.mesh.scale.y + 0.01
 
+/** Lower = faster spawn rate (more bills per second, capped by MAX_ACTIVE_FALLING). */
 const getSpawnInterval = (totalBills) => {
-  if (totalBills <= 1000) return 0.0026
-  if (totalBills <= 5000) return 0.00115
-  if (totalBills <= 20000) return 0.00058
-  return 0.0003
+  if (totalBills <= 1000) return 0.0012
+  if (totalBills <= 5000) return 0.00055
+  if (totalBills <= 20000) return 0.00028
+  return 0.00014
 }
 
 const buildSpawnQueue = (stacks) => {
@@ -424,7 +425,7 @@ const ThreeMoneyScene = ({
     if (!mount) return undefined
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color('#0a0d14')
+    scene.background = new THREE.Color('#070f0c')
     scene.fog = null
 
     const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 600)
@@ -574,7 +575,7 @@ const ThreeMoneyScene = ({
             stackIndex: targetStackIndex,
             velocity: new THREE.Vector3(
               (Math.random() - 0.5) * 1.15,
-              -3.4 - Math.random() * 2.4,
+              -5.2 - Math.random() * 2.8,
               (Math.random() - 0.5) * 1.15,
             ),
             angularVelocity: new THREE.Vector3(
@@ -776,7 +777,7 @@ const ThreeMoneyScene = ({
       completed: false,
       spawnAccumulator: 0,
       spawnInterval: getSpawnInterval(totalBills),
-      gravity: 24.5,
+      gravity: 34,
       stacks,
       spawnQueue,
       animatedBillCount,

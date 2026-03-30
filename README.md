@@ -1,6 +1,6 @@
 # Flous
 
-**Flous** is an interactive web app that visualizes Tunisian dinar (TND) money at scale: enter an amount and denomination, then watch stacks of bills build in 3D, with optional comparisons for physical scale and rough purchasing-power ideas.
+**Flous** is a playful portfolio piece: **see your Tunisian dinar (TND) amount as stacks of bills** in 3D, then optionally peek at physical scale and rough “what could this buy?” ideas — built to impress, not to bank on.
 
 ---
 
@@ -14,8 +14,8 @@ All project code, assets, and documentation in this repository were created by M
 
 ## Features
 
-- **Amount & denomination** — Enter a TND amount and pick a note denomination (bill count is computed from the amount). On first load with no `amount` query parameter, the field starts at **1,000,000** TND with the **20 TND** note selected.
-- **3D stacking** — Three.js scene with bill stacks, falling-bill animation, and orbit controls after the run finishes.
+- **Amount & denomination** — Enter a TND amount and pick a note denomination (bill count is computed from the amount). On first load with no `amount` query parameter, the amount field is **empty** so nothing animates until you choose **Visualize** (default note is **20 TND**).
+- **3D stacking** — Full-screen money scene: bills fall into stacks; orbit the view when the run finishes.
 - **Large amounts** — All runs now keep the falling-bill animation for visual continuity.
 - **Skip waiting** — Optional control to finish the animation immediately and show full stacks.
 - **Scale insights** — Height, ground area, volume, and weight comparisons using US note dimensions as a model (see in-app copy).

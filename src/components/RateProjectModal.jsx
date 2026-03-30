@@ -23,8 +23,8 @@ function StarRating({ value, onChange }) {
           onClick={() => onChange(n)}
           onMouseEnter={() => setHover(n)}
           onMouseLeave={() => setHover(null)}
-          className={`rounded-md p-1 text-[1.65rem] leading-none transition hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-400/50 ${
-            n <= shown ? 'text-amber-400' : 'text-zinc-600'
+          className={`rounded-md p-1 text-[1.65rem] leading-none transition hover:scale-110 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 ${
+            n <= shown ? 'text-yellow-400' : 'text-zinc-600'
           }`}
         >
           ★
@@ -103,13 +103,13 @@ export default function RateProjectModal({ open, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="rate-project-title"
-        className="pointer-events-auto fixed left-1/2 top-1/2 z-[71] w-[min(26rem,calc(100vw-1.25rem))] max-h-[min(90dvh,calc(100dvh-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-2xl border border-amber-400/35 bg-zinc-950/95 p-4 shadow-[0_24px_64px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:p-5"
+        className="pointer-events-auto fixed left-1/2 top-1/2 z-[71] w-[min(26rem,calc(100vw-1.25rem))] max-h-[min(90dvh,calc(100dvh-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-2xl border border-yellow-500/30 bg-emerald-950/95 p-4 shadow-[0_24px_64px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h2 id="rate-project-title" className="text-lg font-semibold text-amber-50">
-              Rate <span className="display-font text-amber-200">Flous</span>
+            <h2 id="rate-project-title" className="text-lg font-semibold text-emerald-50">
+              Rate <span className="display-font text-[var(--money-gold)]">Flous</span>
             </h2>
             <p className="mt-1 text-xs text-zinc-400">
               Quick feedback about Flous — we&apos;ll get it by email.
@@ -125,7 +125,7 @@ export default function RateProjectModal({ open, onClose }) {
         </div>
 
         {status === 'sent' ? (
-          <p className="py-6 text-center text-sm text-amber-200/95">
+          <p className="py-6 text-center text-sm text-emerald-200/95">
             Thanks — your message is on its way.
           </p>
         ) : (
@@ -136,7 +136,7 @@ export default function RateProjectModal({ open, onClose }) {
                 type="text"
                 value={form.name}
                 onChange={handleChange('name')}
-                className="w-full rounded-xl border border-white/10 bg-zinc-900/80 px-3 py-2.5 text-sm text-zinc-100 outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/30"
+                className="w-full rounded-xl border border-white/10 bg-emerald-950/80 px-3 py-2.5 text-sm text-zinc-100 outline-none focus:border-yellow-500/50 focus:ring-1 focus:ring-yellow-500/25"
                 autoComplete="name"
               />
             </label>
@@ -147,7 +147,7 @@ export default function RateProjectModal({ open, onClose }) {
                 required
                 value={form.email}
                 onChange={handleChange('email')}
-                className="w-full rounded-xl border border-white/10 bg-zinc-900/80 px-3 py-2.5 text-sm text-zinc-100 outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/30"
+                className="w-full rounded-xl border border-white/10 bg-emerald-950/80 px-3 py-2.5 text-sm text-zinc-100 outline-none focus:border-yellow-500/50 focus:ring-1 focus:ring-yellow-500/25"
                 autoComplete="email"
               />
             </label>
@@ -166,7 +166,7 @@ export default function RateProjectModal({ open, onClose }) {
                 value={form.message}
                 onChange={handleChange('message')}
                 placeholder="What did you think?"
-                className="w-full resize-none rounded-xl border border-white/10 bg-zinc-900/80 px-3 py-2.5 text-sm text-zinc-100 outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/30"
+                className="w-full resize-none rounded-xl border border-white/10 bg-emerald-950/80 px-3 py-2.5 text-sm text-zinc-100 outline-none focus:border-yellow-500/50 focus:ring-1 focus:ring-yellow-500/25"
               />
             </label>
             {error && <p className="text-xs text-red-400/95">{error}</p>}
@@ -181,7 +181,7 @@ export default function RateProjectModal({ open, onClose }) {
               <button
                 type="submit"
                 disabled={status === 'sending'}
-                className="amber-glow rounded-xl bg-gradient-to-br from-amber-300 to-amber-500 px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-zinc-950 disabled:opacity-60"
+                className="money-glow rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-900 px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-yellow-50 disabled:opacity-60"
               >
                 {status === 'sending' ? 'Sending…' : 'Send'}
               </button>
@@ -194,7 +194,7 @@ export default function RateProjectModal({ open, onClose }) {
             <button
               type="button"
               onClick={handleClose}
-              className="rounded-xl bg-amber-500/20 px-4 py-2 text-sm font-medium text-amber-100"
+              className="rounded-xl bg-emerald-800/40 px-4 py-2 text-sm font-medium text-yellow-100"
             >
               Close
             </button>

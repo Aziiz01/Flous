@@ -4,7 +4,13 @@
 :root {
   color-scheme: dark;
   font-family: Inter, system-ui, -apple-system, sans-serif;
-  background: #06070b;
+  /* Money vault: deep green, paper cream, gold accent */
+  --money-bg: #050d0a;
+  --money-bg-mid: #0c1f18;
+  --money-gold: #e8cf6a;
+  --money-gold-soft: rgba(232, 207, 106, 0.35);
+  --money-emerald: #14523d;
+  --money-surface: rgba(8, 28, 22, 0.55);
 }
 
 * {
@@ -16,10 +22,11 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   background:
-    radial-gradient(circle at 10% -10%, rgba(245, 158, 11, 0.2), transparent 45%),
-    radial-gradient(circle at 85% 15%, rgba(34, 197, 94, 0.2), transparent 38%),
-    #06070b;
-  color: #eef2f7;
+    radial-gradient(ellipse 120% 80% at 50% -30%, rgba(20, 82, 61, 0.45), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(232, 207, 106, 0.08), transparent 42%),
+    radial-gradient(circle at 0% 100%, rgba(8, 45, 35, 0.5), transparent 50%),
+    var(--money-bg);
+  color: #ecf4f0;
 }
 
 #root {
@@ -29,18 +36,22 @@ body {
 
 .display-font {
   font-family: Syne, Inter, sans-serif;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
+/* Frosted panel — money / vault */
 .glass {
-  background: rgba(17, 24, 39, 0.5);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.28);
+  background: var(--money-surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(232, 207, 106, 0.12);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
-.amber-glow {
+.money-glow {
   box-shadow:
-    0 0 0 1px rgba(251, 191, 36, 0.35),
-    0 10px 35px rgba(251, 191, 36, 0.2);
+    0 0 0 1px rgba(232, 207, 106, 0.35),
+    0 8px 32px rgba(20, 82, 61, 0.35),
+    0 12px 40px rgba(232, 207, 106, 0.12);
 }

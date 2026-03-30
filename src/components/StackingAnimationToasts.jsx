@@ -2,9 +2,9 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { gsap } from 'gsap'
 import { buildStackingToastSequence } from '../utils/stackingToastMessages'
 
-const DISPLAY_MS = 3000
-const GAP_AFTER_EXIT_MS = 400
-const MIN_GAP_BETWEEN_TOASTS_MS = 3200
+const DISPLAY_MS = 3400
+const GAP_AFTER_EXIT_MS = 320
+const MIN_GAP_BETWEEN_TOASTS_MS = 2600
 const ENTER_DURATION = 0.55
 const EXIT_DURATION = 0.38
 
@@ -77,7 +77,7 @@ export default function StackingAnimationToasts({
     if (i > 0 && now - lastClosedAtRef.current < MIN_GAP_BETWEEN_TOASTS_MS) return
 
     showingRef.current = true
-    setToast({ text: sequence[i].text, key: `${runId}-${i}` })
+    setToast({ content: sequence[i].content, key: `${runId}-${i}` })
   }, [active, liveCounter, sequence, totalBills, runId])
 
   useEffect(() => {
@@ -124,17 +124,17 @@ export default function StackingAnimationToasts({
   if (!active) return null
 
   return (
-    <div
-      className="pointer-events-none fixed bottom-[max(1rem,env(safe-area-inset-bottom,0px))] left-[max(0.75rem,env(safe-area-inset-left,0px))] z-[60] max-w-[min(22rem,calc(100vw-1.5rem))] md:bottom-8 md:left-8"
+      <div
+        className="pointer-events-none fixed bottom-[max(1rem,env(safe-area-inset-bottom,0px))] left-[max(0.75rem,env(safe-area-inset-left,0px))] z-[60] max-w-[min(22rem,calc(100vw-1.5rem))] md:bottom-8 md:left-8"
       aria-live="polite"
     >
       {toast && (
         <div
           key={toast.key}
           ref={toastElRef}
-          className="glass rounded-full border border-amber-400/25 bg-zinc-950/55 px-4 py-2.5 text-sm text-amber-50/95 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+          className="glass pointer-events-auto max-w-[min(22rem,calc(100vw-2rem))] rounded-2xl rounded-br-3xl border border-yellow-500/25 bg-emerald-950/55 px-4 py-3 text-sm font-medium leading-relaxed text-emerald-50 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:rounded-3xl"
         >
-          <p className="leading-snug text-amber-50">{toast.text}</p>
+          <div className="leading-snug text-emerald-50">{toast.content}</div>
         </div>
       )}
     </div>

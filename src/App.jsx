@@ -11,14 +11,13 @@ import { DEFAULT_DENOMINATION, DENOMINATIONS } from './data/denominations'
 import { formatNumber, parseFormattedNumber } from './utils/format'
 
 const MAX_AMOUNT = 9_999_999_999
-const DEFAULT_AMOUNT = 1_000_000
 
 const getInitialStateFromUrl = () => {
   const params = new URLSearchParams(window.location.search)
   const amountParam = params.get('amount')
   const amount =
     amountParam === null
-      ? DEFAULT_AMOUNT
+      ? 0
       : Math.min(MAX_AMOUNT, parseFormattedNumber(amountParam))
   const denominationFromUrl = Number(params.get('denom'))
   const denomination = DENOMINATIONS.some((item) => item.value === denominationFromUrl)
@@ -30,7 +29,9 @@ const getInitialStateFromUrl = () => {
 
 function App() {
   const initial = getInitialStateFromUrl()
-  const [amountInput, setAmountInput] = useState(formatNumber(initial.amount))
+  const [amountInput, setAmountInput] = useState(
+    initial.amount > 0 ? formatNumber(initial.amount) : '',
+  )
   const [denomination, setDenomination] = useState(initial.denomination)
   const [scenario, setScenario] = useState(() => ({
     amount: initial.amount,
@@ -112,7 +113,7 @@ function App() {
   const showStackingToasts = toastSessionActive && scenario.bills > 0
 
   return (
-    <main className="relative h-dvh max-h-dvh w-full overflow-hidden bg-[#020306]">
+    <main className="relative h-dvh max-h-dvh w-full overflow-hidden bg-[var(--money-bg)]">
       <ThreeMoneyScene
         totalBills={scenario.bills}
         denomination={scenario.denomination}
@@ -124,10 +125,10 @@ function App() {
       />
 
       <div className="pointer-events-none absolute inset-0 z-10 overflow-y-auto overflow-x-hidden overscroll-y-contain">
-        <div className="flex w-full flex-col items-center px-[max(0.75rem,env(safe-area-inset-left))] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.25rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))] md:pb-4 md:pt-0">
+        <div className="flex w-full flex-col items-center px-[max(0.75rem,env(safe-area-inset-left))] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.35rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))] md:pb-4 md:pt-2">
           <div
             ref={overlayRef}
-            className={`pointer-events-auto w-full max-w-4xl p-3 sm:p-4 md:p-6 ${isAnimating ? 'max-md:hidden' : ''}`}
+            className={`pointer-events-auto w-full max-w-lg p-2 sm:p-3 md:max-w-xl md:p-4 ${isAnimating ? 'max-md:hidden' : ''}`}
           >
             <InputPanel
               amountInput={amountInput}
@@ -136,33 +137,43 @@ function App() {
               setDenomination={setDenomination}
               onVisualize={handleVisualize}
               onOpenRate={() => setShowRateModal(true)}
+              canVisualize={billCount > 0}
             />
           </div>
 
           {scenario.bills > 0 && (
             <div
-              className={`pointer-events-auto mx-auto flex w-full max-w-[min(100vw-1rem,28rem)] flex-col items-center rounded-2xl border border-amber-300/35 bg-black/45 px-3 py-2 backdrop-blur-md sm:w-fit sm:px-5 ${isAnimating ? 'mt-1 md:mt-2' : 'mt-2'}`}
+              className={`pointer-events-auto flex w-full max-w-[min(100vw-1rem,22rem)] flex-col items-center rounded-2xl border border-yellow-500/25 bg-emerald-950/55 px-3 py-2 shadow-lg shadow-black/30 backdrop-blur-md sm:max-w-md sm:px-4 ${
+                isAnimating
+                  ? 'fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-20 -translate-x-1/2'
+                  : 'mx-auto mt-2'
+              }`}
             >
-              <p className="display-font text-center text-sm font-semibold text-amber-100 sm:text-base md:text-lg">
-                {formatNumber(liveCounter)} bills{isAnimating ? ' and counting...' : '.'}
+              <p className="display-font text-center text-base font-bold tabular-nums text-[var(--money-gold)] sm:text-lg">
+                {formatNumber(liveCounter)}
+                <span className="text-sm font-semibold text-emerald-200/90 sm:text-base">
+                  /{formatNumber(scenario.bills)} bills
+                </span>
               </p>
-              <p className="mt-1 text-center text-xs text-zinc-300">
-                Stacks fill in order: 1 stack = {formatNumber(sceneMeta.stackBillCapacity)} bills.
-              </p>
+              {!isAnimating && (
+                <p className="mt-0.5 text-center text-[10px] text-emerald-400/80">
+                  {formatNumber(sceneMeta.stackBillCapacity)} bills per stack
+                </p>
+              )}
               {isAnimating && (
                 <button
                   type="button"
                   onClick={() => setSkipInstantToken((n) => n + 1)}
-                  className="mt-2 touch-manipulation rounded-full border border-amber-400/45 bg-amber-500/20 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-amber-50 transition hover:bg-amber-500/30"
+                  className="mt-2 touch-manipulation rounded-full border border-yellow-500/40 bg-emerald-900/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-yellow-100 transition hover:bg-emerald-800/60"
                 >
-                  Skip waiting
+                  Skip
                 </button>
               )}
             </div>
           )}
 
           {insightsUnlocked && scenario.bills > 0 && !showScaleOverlay && (
-            <div className="pointer-events-auto mt-3 w-full max-w-[min(100vw-1rem,28rem)] px-2">
+            <div className="pointer-events-auto mt-3 w-full max-w-lg px-1 sm:px-2">
               <ScaleInsightsDock onOpen={() => setShowScaleOverlay(true)} />
             </div>
           )}

@@ -4,27 +4,27 @@ export default function AuthorCreditBanner({ visible, stacked = false }) {
   if (!visible) return null
 
   const card = (
-    <div className="glass rounded-2xl border border-amber-400/30 bg-zinc-950/65 px-3 py-2.5 text-center shadow-[0_16px_48px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-4 sm:py-3">
-        <p className="text-xs font-medium leading-snug text-amber-50/95 sm:text-sm">
-          <span className="display-font font-semibold text-amber-200/95">Flous</span>
+    <div className="glass rounded-2xl border border-yellow-500/25 bg-emerald-950/70 px-3 py-2.5 text-center shadow-[0_16px_48px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-4 sm:py-3">
+        <p className="text-xs font-medium leading-snug text-emerald-100/95 sm:text-sm">
+          <span className="display-font font-semibold text-[var(--money-gold)]">Flous</span>
           {' — '}
-          Built by Aziz — I turned money into art. Imagine what I&apos;d do for your product 🚀
+          By Aziz · money &amp; motion, for your next project.
         </p>
-        <p className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-amber-200/85">
+        <p className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-emerald-300/90">
           <a
             href={AZIZ_LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md underline decoration-amber-400/50 underline-offset-2 transition hover:text-amber-50 hover:decoration-amber-300"
+            className="rounded-md underline decoration-yellow-500/45 underline-offset-2 transition hover:text-yellow-100 hover:decoration-yellow-300"
           >
             LinkedIn
           </a>
-          <span className="text-zinc-500">·</span>
+          <span className="text-emerald-700">·</span>
           <a
             href={AZIZ_PORTFOLIO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md underline decoration-amber-400/50 underline-offset-2 transition hover:text-amber-50 hover:decoration-amber-300"
+            className="rounded-md underline decoration-yellow-500/45 underline-offset-2 transition hover:text-yellow-100 hover:decoration-yellow-300"
           >
             Portfolio
           </a>

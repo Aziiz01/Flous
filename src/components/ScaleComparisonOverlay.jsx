@@ -110,8 +110,8 @@ const ScaleComparisonOverlay = ({
   if (!open) return null
 
   const panelShellClass = stackAboveFooter
-    ? 'pointer-events-auto relative z-40 flex max-h-[min(50dvh,620px)] w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-amber-400/30 bg-zinc-950/85 shadow-[0_8px_48px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:max-h-[min(56vh,700px)]'
-    : 'pointer-events-auto fixed left-1/2 z-40 w-[min(94vw,1000px)] -translate-x-1/2 rounded-2xl border border-amber-400/30 bg-zinc-950/85 shadow-[0_8px_48px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl max-md:top-1/2 max-md:max-h-[min(88dvh,720px)] max-md:-translate-y-1/2 md:top-[max(11.5rem,env(safe-area-inset-top,0px))] md:max-h-[min(65vh,780px)] md:translate-y-0'
+    ? 'pointer-events-auto relative z-40 flex max-h-[min(50dvh,620px)] w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-yellow-500/25 bg-emerald-950/90 shadow-[0_8px_48px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:max-h-[min(56vh,700px)]'
+    : 'pointer-events-auto fixed left-1/2 z-40 w-[min(94vw,1000px)] -translate-x-1/2 rounded-2xl border border-yellow-500/25 bg-emerald-950/90 shadow-[0_8px_48px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl max-md:top-1/2 max-md:max-h-[min(88dvh,720px)] max-md:-translate-y-1/2 md:top-[max(11.5rem,env(safe-area-inset-top,0px))] md:max-h-[min(65vh,780px)] md:translate-y-0'
 
   const panelInner = (
     <>
@@ -119,7 +119,7 @@ const ScaleComparisonOverlay = ({
           className="pointer-events-none absolute inset-0 rounded-2xl opacity-[0.15]"
           style={{
             background:
-              'radial-gradient(ellipse 80% 60% at 50% -20%, rgba(251,191,36,0.25), transparent 50%)',
+              'radial-gradient(ellipse 80% 60% at 50% -20%, rgba(232,207,106,0.22), transparent 50%)',
           }}
         />
         <div
@@ -129,7 +129,7 @@ const ScaleComparisonOverlay = ({
               : 'relative flex max-h-[min(88dvh,720px)] flex-col overflow-hidden rounded-2xl md:max-h-[min(65vh,780px)]'
           }
         >
-          <div className="flex shrink-0 items-center justify-between gap-2 border-b border-amber-500/15 bg-black/25 px-3 py-3 sm:gap-3 sm:px-4 sm:py-3.5 md:px-5 md:py-4">
+          <div className="flex shrink-0 items-center justify-between gap-2 border-b border-yellow-500/15 bg-black/25 px-3 py-3 sm:gap-3 sm:px-4 sm:py-3.5 md:px-5 md:py-4">
             <p id="scale-overlay-title" className="sr-only">
               Scale comparison and purchasing power
             </p>
@@ -139,7 +139,7 @@ const ScaleComparisonOverlay = ({
                 onClick={() => setTab('scale')}
                 className={`shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition sm:px-3.5 sm:py-2 sm:text-sm md:px-4 ${
                   tab === 'scale'
-                    ? 'bg-gradient-to-b from-amber-300 to-amber-500 text-zinc-950 shadow-md shadow-amber-900/30'
+                    ? 'bg-gradient-to-b from-emerald-500 to-emerald-800 text-yellow-50 shadow-md shadow-emerald-950/40'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
@@ -150,7 +150,7 @@ const ScaleComparisonOverlay = ({
                 onClick={() => setTab('buy')}
                 className={`min-w-0 rounded-lg px-2 py-1.5 text-xs font-semibold transition sm:px-3.5 sm:py-2 sm:text-sm md:px-4 ${
                   tab === 'buy'
-                    ? 'bg-gradient-to-b from-amber-300 to-amber-500 text-zinc-950 shadow-md shadow-amber-900/30'
+                    ? 'bg-gradient-to-b from-emerald-500 to-emerald-800 text-yellow-50 shadow-md shadow-emerald-950/40'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
@@ -161,7 +161,7 @@ const ScaleComparisonOverlay = ({
             <button
               type="button"
               onClick={onDismiss}
-              className="shrink-0 touch-manipulation rounded-xl border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition hover:border-amber-400/45 hover:bg-amber-500/10 hover:text-amber-50 sm:px-3 sm:py-2 sm:text-sm"
+              className="shrink-0 touch-manipulation rounded-xl border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition hover:border-yellow-500/45 hover:bg-emerald-800/40 hover:text-yellow-50 sm:px-3 sm:py-2 sm:text-sm"
             >
               Close
             </button>
@@ -172,7 +172,7 @@ const ScaleComparisonOverlay = ({
               <div ref={scaleContentRef} className="space-y-4">
                 <div
                   data-stagger-card
-                  className="rounded-xl border border-dashed border-amber-500/20 bg-amber-500/[0.06] px-3 py-2.5 text-center text-[11px] leading-relaxed text-zinc-400 md:text-xs"
+                  className="rounded-xl border border-dashed border-yellow-500/25 bg-emerald-900/30 px-3 py-2.5 text-center text-[11px] leading-relaxed text-zinc-400 md:text-xs"
                 >
                   Model uses standard US note size:{' '}
                   <span className="font-medium text-zinc-300">
@@ -182,16 +182,16 @@ const ScaleComparisonOverlay = ({
                 </div>
 
                 <div className={statCardClass}>
-                  <span className={accentBar('from-amber-300', 'to-amber-600/40')} />
+                  <span className={accentBar('from-yellow-400', 'to-emerald-700/40')} />
                   <div className="flex gap-3 md:gap-4">
                     <span
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-xl ring-1 ring-amber-400/25 md:h-12 md:w-12"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-yellow-500/15 text-xl ring-1 ring-yellow-400/25 md:h-12 md:w-12"
                       aria-hidden
                     >
                       ↕️
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-200/80">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-200/85">
                         Height
                       </p>
                       <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
@@ -283,14 +283,14 @@ const ScaleComparisonOverlay = ({
               <div ref={buyContentRef} className="space-y-4">
                 <div
                   data-stagger-card
-                  className="rounded-xl border border-amber-500/20 bg-gradient-to-r from-amber-500/[0.08] to-transparent px-4 py-3 text-center md:text-left"
+                  className="rounded-xl border border-yellow-500/20 bg-gradient-to-r from-yellow-500/[0.08] to-transparent px-4 py-3 text-center md:text-left"
                 >
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-200/90">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-200/90">
                     Purchasing power (estimate)
                   </p>
                   <p className="mt-1 text-sm text-zinc-400">
                     ≈{' '}
-                    <span className="display-font text-lg font-bold text-amber-200 md:text-xl">
+                    <span className="display-font text-lg font-bold text-[var(--money-gold)] md:text-xl">
                       {formatUsd(amountUsd)}
                     </span>{' '}
                     <span className="text-zinc-500">USD</span>
@@ -322,11 +322,11 @@ const ScaleComparisonOverlay = ({
                           <p className="font-semibold leading-snug text-zinc-100">{row.name}</p>
                           <p className="mt-0.5 text-xs text-zinc-500">{formatUsd(row.priceUsd)} each</p>
                         </div>
-                        <div className="flex shrink-0 flex-col items-center justify-center rounded-r-[0.9rem] bg-gradient-to-b from-amber-400/20 to-amber-600/10 px-3 py-2 ring-1 ring-amber-400/25 md:px-4">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-200/80">
+                        <div className="flex shrink-0 flex-col items-center justify-center rounded-r-[0.9rem] bg-gradient-to-b from-yellow-500/20 to-emerald-800/20 px-3 py-2 ring-1 ring-yellow-500/25 md:px-4">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-200/80">
                             ×
                           </span>
-                          <span className="display-font text-lg font-extrabold tabular-nums text-amber-50 md:text-xl">
+                          <span className="display-font text-lg font-extrabold tabular-nums text-yellow-50 md:text-xl">
                             {formatQtyBuy(row.qty)}
                           </span>
                         </div>
