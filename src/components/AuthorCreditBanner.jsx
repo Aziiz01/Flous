@@ -4,8 +4,8 @@ export default function AuthorCreditBanner({ visible, stacked = false }) {
   if (!visible) return null
 
   const card = (
-    <div className="glass rounded-2xl border border-amber-400/30 bg-zinc-950/65 px-4 py-3 text-center shadow-[0_16px_48px_rgba(0,0,0,0.4)] backdrop-blur-xl">
-        <p className="text-sm font-medium text-amber-50/95">
+    <div className="glass rounded-2xl border border-amber-400/30 bg-zinc-950/65 px-3 py-2.5 text-center shadow-[0_16px_48px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-4 sm:py-3">
+        <p className="text-xs font-medium leading-snug text-amber-50/95 sm:text-sm">
           <span className="display-font font-semibold text-amber-200/95">Flous</span>
           {' — '}
           Built by Aziz — I turned money into art. Imagine what I&apos;d do for your product 🚀
@@ -37,7 +37,7 @@ export default function AuthorCreditBanner({ visible, stacked = false }) {
   }
 
   return (
-    <div className="pointer-events-auto fixed bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] left-1/2 z-[32] w-[min(26rem,calc(100vw-1.5rem))] -translate-x-1/2 px-2">
+    <div className="pointer-events-auto fixed bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] left-1/2 z-[32] w-[min(26rem,calc(100vw-1rem))] -translate-x-1/2 px-2">
       {card}
     </div>
   )

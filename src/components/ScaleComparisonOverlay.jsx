@@ -110,8 +110,8 @@ const ScaleComparisonOverlay = ({
   if (!open) return null
 
   const panelShellClass = stackAboveFooter
-    ? 'pointer-events-auto relative z-40 flex max-h-[min(50vh,620px)] w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-amber-400/30 bg-zinc-950/85 shadow-[0_8px_48px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:max-h-[min(56vh,700px)]'
-    : 'pointer-events-auto fixed left-1/2 top-[max(11rem,env(safe-area-inset-top,0px))] z-40 max-h-[min(58vh,720px)] w-[min(92vw,1000px)] -translate-x-1/2 rounded-2xl border border-amber-400/30 bg-zinc-950/85 shadow-[0_8px_48px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:top-[max(11.5rem,env(safe-area-inset-top,0px))] md:max-h-[min(65vh,780px)]'
+    ? 'pointer-events-auto relative z-40 flex max-h-[min(50dvh,620px)] w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-amber-400/30 bg-zinc-950/85 shadow-[0_8px_48px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl md:max-h-[min(56vh,700px)]'
+    : 'pointer-events-auto fixed left-1/2 z-40 w-[min(94vw,1000px)] -translate-x-1/2 rounded-2xl border border-amber-400/30 bg-zinc-950/85 shadow-[0_8px_48px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl max-md:top-1/2 max-md:max-h-[min(88dvh,720px)] max-md:-translate-y-1/2 md:top-[max(11.5rem,env(safe-area-inset-top,0px))] md:max-h-[min(65vh,780px)] md:translate-y-0'
 
   const panelInner = (
     <>
@@ -126,18 +126,18 @@ const ScaleComparisonOverlay = ({
           className={
             stackAboveFooter
               ? 'relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl'
-              : 'relative flex max-h-[min(58vh,720px)] flex-col overflow-hidden rounded-2xl md:max-h-[min(65vh,780px)]'
+              : 'relative flex max-h-[min(88dvh,720px)] flex-col overflow-hidden rounded-2xl md:max-h-[min(65vh,780px)]'
           }
         >
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-amber-500/15 bg-black/25 px-4 py-3.5 md:px-5 md:py-4">
+          <div className="flex shrink-0 items-center justify-between gap-2 border-b border-amber-500/15 bg-black/25 px-3 py-3 sm:gap-3 sm:px-4 sm:py-3.5 md:px-5 md:py-4">
             <p id="scale-overlay-title" className="sr-only">
               Scale comparison and purchasing power
             </p>
-            <div className="flex gap-1 rounded-xl bg-black/50 p-1 ring-1 ring-white/10">
+            <div className="flex min-w-0 flex-1 gap-0.5 rounded-xl bg-black/50 p-1 ring-1 ring-white/10 sm:gap-1">
               <button
                 type="button"
                 onClick={() => setTab('scale')}
-                className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition md:px-4 ${
+                className={`shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition sm:px-3.5 sm:py-2 sm:text-sm md:px-4 ${
                   tab === 'scale'
                     ? 'bg-gradient-to-b from-amber-300 to-amber-500 text-zinc-950 shadow-md shadow-amber-900/30'
                     : 'text-zinc-400 hover:text-zinc-200'
@@ -148,25 +148,26 @@ const ScaleComparisonOverlay = ({
               <button
                 type="button"
                 onClick={() => setTab('buy')}
-                className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition md:px-4 ${
+                className={`min-w-0 rounded-lg px-2 py-1.5 text-xs font-semibold transition sm:px-3.5 sm:py-2 sm:text-sm md:px-4 ${
                   tab === 'buy'
                     ? 'bg-gradient-to-b from-amber-300 to-amber-500 text-zinc-950 shadow-md shadow-amber-900/30'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
-                What Can This Buy?
+                <span className="sm:hidden">Buying power</span>
+                <span className="hidden sm:inline">What Can This Buy?</span>
               </button>
             </div>
             <button
               type="button"
               onClick={onDismiss}
-              className="shrink-0 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-zinc-200 transition hover:border-amber-400/45 hover:bg-amber-500/10 hover:text-amber-50"
+              className="shrink-0 touch-manipulation rounded-xl border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition hover:border-amber-400/45 hover:bg-amber-500/10 hover:text-amber-50 sm:px-3 sm:py-2 sm:text-sm"
             >
               Close
             </button>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:px-6 md:py-5">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5">
             {tab === 'scale' && (
               <div ref={scaleContentRef} className="space-y-4">
                 <div
@@ -193,7 +194,7 @@ const ScaleComparisonOverlay = ({
                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-200/80">
                         Height
                       </p>
-                      <p className="display-font mt-1 text-2xl font-extrabold tabular-nums tracking-tight text-white md:text-3xl">
+                      <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
                         {physics.totalHeightM < 1
                           ? `${(physics.totalHeightM * 100).toFixed(1)} cm`
                           : `${physics.totalHeightM.toFixed(2)} m`}
@@ -217,7 +218,7 @@ const ScaleComparisonOverlay = ({
                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-200/85">
                         Area covered
                       </p>
-                      <p className="display-font mt-1 text-2xl font-extrabold tabular-nums tracking-tight text-white md:text-3xl">
+                      <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
                         {physics.totalGroundAreaM2 < 10_000
                           ? `${physics.totalGroundAreaM2.toFixed(1)} m²`
                           : `${(physics.totalGroundAreaM2 / 1_000_000).toFixed(3)} km²`}
@@ -241,7 +242,7 @@ const ScaleComparisonOverlay = ({
                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-sky-200/85">
                         Volume
                       </p>
-                      <p className="display-font mt-1 text-2xl font-extrabold tabular-nums tracking-tight text-white md:text-3xl">
+                      <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
                         {physics.volumeM3 < 1
                           ? `${(physics.volumeM3 * 1_000_000).toFixed(0)} cm³`
                           : `${physics.volumeM3.toFixed(3)} m³`}
@@ -265,7 +266,7 @@ const ScaleComparisonOverlay = ({
                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-200/85">
                         Weight
                       </p>
-                      <p className="display-font mt-1 text-2xl font-extrabold tabular-nums tracking-tight text-white md:text-3xl">
+                      <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
                         {physics.weightKg < 1000
                           ? `${physics.weightKg.toFixed(1)} kg`
                           : `${(physics.weightKg / 1000).toFixed(2)} t`}

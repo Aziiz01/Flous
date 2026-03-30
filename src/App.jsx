@@ -116,7 +116,7 @@ function App() {
     scenario.bills > 0
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden bg-[#020306]">
+    <main className="relative h-dvh max-h-dvh w-full overflow-hidden bg-[#020306]">
       <ThreeMoneyScene
         totalBills={scenario.bills}
         denomination={scenario.denomination}
@@ -127,9 +127,9 @@ function App() {
         onMeta={handleSceneMeta}
       />
 
-      <div className="pointer-events-none absolute inset-0 z-10">
-        <div className="flex w-full flex-col items-center">
-          <div ref={overlayRef} className="pointer-events-auto w-full max-w-4xl p-4 md:p-6">
+      <div className="pointer-events-none absolute inset-0 z-10 overflow-y-auto overflow-x-hidden overscroll-y-contain">
+        <div className="flex w-full flex-col items-center px-[max(0.75rem,env(safe-area-inset-left))] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.25rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))] md:pb-4 md:pt-0">
+          <div ref={overlayRef} className="pointer-events-auto w-full max-w-4xl p-3 sm:p-4 md:p-6">
             <InputPanel
               amountInput={amountInput}
               denomination={denomination}
@@ -141,8 +141,8 @@ function App() {
           </div>
 
           {scenario.bills > 0 && (
-            <div className="pointer-events-auto mx-auto mt-2 flex w-fit max-w-[min(100vw-1rem,28rem)] flex-col items-center rounded-2xl border border-amber-300/35 bg-black/45 px-5 py-2 backdrop-blur-md">
-              <p className="display-font text-center text-base font-semibold text-amber-100 md:text-lg">
+            <div className="pointer-events-auto mx-auto mt-2 flex w-full max-w-[min(100vw-1rem,28rem)] flex-col items-center rounded-2xl border border-amber-300/35 bg-black/45 px-3 py-2 backdrop-blur-md sm:w-fit sm:px-5">
+              <p className="display-font text-center text-sm font-semibold text-amber-100 sm:text-base md:text-lg">
                 {formatNumber(liveCounter)} bills{isAnimating ? ' and counting...' : '.'}
               </p>
               <p className="mt-1 text-center text-xs text-zinc-300">
@@ -152,7 +152,7 @@ function App() {
                 <button
                   type="button"
                   onClick={() => setSkipInstantToken((n) => n + 1)}
-                  className="mt-2 rounded-full border border-amber-400/45 bg-amber-500/20 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-amber-50 transition hover:bg-amber-500/30"
+                  className="mt-2 touch-manipulation rounded-full border border-amber-400/45 bg-amber-500/20 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-amber-50 transition hover:bg-amber-500/30"
                 >
                   Skip waiting
                 </button>

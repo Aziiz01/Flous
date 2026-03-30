@@ -103,7 +103,7 @@ export default function RateProjectModal({ open, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="rate-project-title"
-        className="pointer-events-auto fixed left-1/2 top-1/2 z-[71] w-[min(26rem,calc(100vw-1.5rem))] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-amber-400/35 bg-zinc-950/95 p-5 shadow-[0_24px_64px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+        className="pointer-events-auto fixed left-1/2 top-1/2 z-[71] w-[min(26rem,calc(100vw-1.25rem))] max-h-[min(90dvh,calc(100dvh-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-2xl border border-amber-400/35 bg-zinc-950/95 p-4 shadow-[0_24px_64px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-start justify-between gap-3">

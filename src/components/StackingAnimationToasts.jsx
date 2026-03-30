@@ -125,7 +125,7 @@ export default function StackingAnimationToasts({
 
   return (
     <div
-      className="pointer-events-none fixed bottom-6 left-4 z-[60] max-w-[min(22rem,calc(100vw-2rem))] md:bottom-8 md:left-8"
+      className="pointer-events-none fixed bottom-[max(1rem,env(safe-area-inset-bottom,0px))] left-[max(0.75rem,env(safe-area-inset-left,0px))] z-[60] max-w-[min(22rem,calc(100vw-1.5rem))] md:bottom-8 md:left-8"
       aria-live="polite"
     >
       {toast && (
