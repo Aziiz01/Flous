@@ -1,25 +1,25 @@
 import { formatNumber } from './format'
 
 const EARLY = [
-  'Your GPU is sweating right now...',
-  'No seriously, have you heard of mercy?',
-  'My Three.js is having an existential crisis',
+  'Building stacks...',
+  'Counting every note accurately.',
+  'Flow is stable. Keep watching.',
 ]
 
 const MIDDLE = [
-  "The bills won't stop. Send help.",
-  'Your electricity bill just increased',
+  'Stacks are rising fast.',
+  'Every layer is physically simulated.',
   '__COFFEE__',
-  'Fun fact: this much cash weighs more than your life choices',
-  'Still going... just like my student loans',
-  'PSA: the developer who built this is available for hire 👀',
-  'Seriously though — hire me. I rendered a MILLION bills for you.',
+  'Progress checkpoint reached.',
+  'Large totals stay smooth with optimized rendering.',
+  'You can use "Skip waiting" any time.',
+  'Almost at full volume.',
 ]
 
 const END = [
-  'Available for full-time, freelance, or just vibes. LinkedIn in the footer.',
-  "If this impressed you, imagine what I'd do with a real salary",
-  "Animation complete. Now go hire the engineer who made this possible.",
+  'Final layers in progress.',
+  'Wrapping up the last stacks.',
+  'Complete. Explore the scale and buying power panel next.',
 ]
 
 function mulberry32(seed) {
@@ -44,8 +44,8 @@ function shuffle(array, seed) {
 export function buildStackingToastSequence(totalBills, runId) {
   const coffee =
     totalBills > 0
-      ? `I rendered ${formatNumber(totalBills)} bills. You owe me a coffee.`
-      : 'I rendered a lot of bills. You owe me a coffee.'
+      ? `${formatNumber(totalBills)} bills in this run.`
+      : 'High-volume run in progress.'
 
   const middleResolved = MIDDLE.map((line) => (line === '__COFFEE__' ? coffee : line))
   const shuffledMiddle = shuffle(middleResolved, runId + 7919)

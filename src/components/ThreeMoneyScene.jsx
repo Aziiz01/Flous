@@ -2,8 +2,6 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-import { INSTANT_FILL_THRESHOLD_BILLS } from '../config/sceneConfig'
-
 const MAX_RENDER_STACKS = 2800
 const STACK_BILL_CAPACITY = 100
 const BASE_STACK_HEIGHT = 1.15
@@ -354,18 +352,8 @@ const getSpawnInterval = (totalBills) => {
   return 0.0003
 }
 
-const buildSpawnQueue = (stacks, turboMode) => {
+const buildSpawnQueue = (stacks) => {
   if (!stacks.length) return { queue: [], instantFilledBills: 0, animatedBillCount: 0 }
-
-  if (turboMode) {
-    let instantFilledBills = 0
-    stacks.forEach((stack) => {
-      stack.currentBills = stack.capacityBills
-      updateStackHeight(stack)
-      instantFilledBills += stack.capacityBills
-    })
-    return { queue: [], instantFilledBills, animatedBillCount: 0 }
-  }
 
   const queue = []
   stacks.forEach((stack) => {
@@ -705,7 +693,6 @@ const ThreeMoneyScene = ({
     core.controls.enabled = false
 
     const plan = buildSimulationPlan(totalBills)
-    const turboInstantMode = totalBills >= INSTANT_FILL_THRESHOLD_BILLS
     const style = NOTE_STYLE_BY_DENOM[denomination] ?? NOTE_STYLE_BY_DENOM[10]
     const textures = createBillTextureSet(denomination)
     textures.sideCashMap = createCashSideTexture(style)
@@ -715,7 +702,6 @@ const ThreeMoneyScene = ({
       renderedStackCount: plan.renderedStackCount,
       stackBillCapacity: STACK_BILL_CAPACITY,
       stacksPerRendered: plan.stacksPerRendered,
-      turboInstantMode,
     })
 
     const frontMaterial = new THREE.MeshStandardMaterial({
@@ -773,10 +759,7 @@ const ThreeMoneyScene = ({
       return stack
     })
 
-    const { queue: spawnQueue, instantFilledBills, animatedBillCount } = buildSpawnQueue(
-      stacks,
-      turboInstantMode,
-    )
+    const { queue: spawnQueue, instantFilledBills, animatedBillCount } = buildSpawnQueue(stacks)
     if (instantFilledBills > 0) {
       onProgress(instantFilledBills)
     } else {

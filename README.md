@@ -16,7 +16,7 @@ All project code, assets, and documentation in this repository were created by M
 
 - **Amount & denomination** — Enter a TND amount and pick a note denomination (bill count is computed from the amount). On first load with no `amount` query parameter, the field starts at **1,000,000** TND with the **20 TND** note selected.
 - **3D stacking** — Three.js scene with bill stacks, falling-bill animation, and orbit controls after the run finishes.
-- **Large amounts** — Very high bill counts switch to an instant “turbo” fill so the experience stays responsive (threshold is configurable in `src/config/sceneConfig.js`).
+- **Large amounts** — All runs now keep the falling-bill animation for visual continuity.
 - **Skip waiting** — Optional control to finish the animation immediately and show full stacks.
 - **Scale insights** — Height, ground area, volume, and weight comparisons using US note dimensions as a model (see in-app copy).
 - **Purchasing power (estimate)** — Illustrative “what could this buy?” list using a rough TND→USD rate (entertainment / education only, not financial advice).
@@ -105,9 +105,9 @@ npm run lint
 
 Rate / feedback emails use EmailJS. Copy `src/config/emailjs.js` patterns and supply your own service, template, and public key. Without valid configuration, the UI may still render but sending can fail until keys are set.
 
-### Turbo / instant-fill threshold
+### Skip waiting control
 
-Edit `INSTANT_FILL_THRESHOLD_BILLS` in `src/config/sceneConfig.js` to change when the app switches from animated stacking to instant fill.
+If you want to end the animation immediately, use the **Skip waiting** button while the run is active.
 
 ---
 

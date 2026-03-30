@@ -52,7 +52,6 @@ function App() {
     renderedStackCount: 0,
     stackBillCapacity: 100,
     stacksPerRendered: 1,
-    turboInstantMode: false,
   })
   const overlayRef = useRef(null)
 
@@ -110,10 +109,7 @@ function App() {
     setSceneMeta(meta)
   }, [])
 
-  const showStackingToasts =
-    toastSessionActive &&
-    !sceneMeta.turboInstantMode &&
-    scenario.bills > 0
+  const showStackingToasts = toastSessionActive && scenario.bills > 0
 
   return (
     <main className="relative h-dvh max-h-dvh w-full overflow-hidden bg-[#020306]">
@@ -153,7 +149,7 @@ function App() {
               <p className="mt-1 text-center text-xs text-zinc-300">
                 Stacks fill in order: 1 stack = {formatNumber(sceneMeta.stackBillCapacity)} bills.
               </p>
-              {isAnimating && !sceneMeta.turboInstantMode && (
+              {isAnimating && (
                 <button
                   type="button"
                   onClick={() => setSkipInstantToken((n) => n + 1)}
@@ -161,11 +157,6 @@ function App() {
                 >
                   Skip waiting
                 </button>
-              )}
-              {sceneMeta.turboInstantMode && (
-                <p className="text-center text-[11px] text-amber-200/90">
-                  Whoa, put less money to see the animation, man! You took all the fun out of it by going big.
-                </p>
               )}
             </div>
           )}
