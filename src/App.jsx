@@ -129,7 +129,10 @@ function App() {
 
       <div className="pointer-events-none absolute inset-0 z-10 overflow-y-auto overflow-x-hidden overscroll-y-contain">
         <div className="flex w-full flex-col items-center px-[max(0.75rem,env(safe-area-inset-left))] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.25rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))] md:pb-4 md:pt-0">
-          <div ref={overlayRef} className="pointer-events-auto w-full max-w-4xl p-3 sm:p-4 md:p-6">
+          <div
+            ref={overlayRef}
+            className={`pointer-events-auto w-full max-w-4xl p-3 sm:p-4 md:p-6 ${isAnimating ? 'max-md:hidden' : ''}`}
+          >
             <InputPanel
               amountInput={amountInput}
               denomination={denomination}
@@ -141,7 +144,9 @@ function App() {
           </div>
 
           {scenario.bills > 0 && (
-            <div className="pointer-events-auto mx-auto mt-2 flex w-full max-w-[min(100vw-1rem,28rem)] flex-col items-center rounded-2xl border border-amber-300/35 bg-black/45 px-3 py-2 backdrop-blur-md sm:w-fit sm:px-5">
+            <div
+              className={`pointer-events-auto mx-auto flex w-full max-w-[min(100vw-1rem,28rem)] flex-col items-center rounded-2xl border border-amber-300/35 bg-black/45 px-3 py-2 backdrop-blur-md sm:w-fit sm:px-5 ${isAnimating ? 'mt-1 md:mt-2' : 'mt-2'}`}
+            >
               <p className="display-font text-center text-sm font-semibold text-amber-100 sm:text-base md:text-lg">
                 {formatNumber(liveCounter)} bills{isAnimating ? ' and counting...' : '.'}
               </p>
