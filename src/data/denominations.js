@@ -7,4 +7,4 @@ export const DENOMINATIONS = [
   { value: 50, label: '50 TND', tone: 'from-sky-600 to-sky-500' },
 ]
 
-export const DEFAULT_DENOMINATION = 50
+export const DEFAULT_DENOMINATION = 20

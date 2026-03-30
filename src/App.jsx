@@ -11,10 +11,15 @@ import { DEFAULT_DENOMINATION, DENOMINATIONS } from './data/denominations'
 import { formatNumber, parseFormattedNumber } from './utils/format'
 
 const MAX_AMOUNT = 9_999_999_999
+const DEFAULT_AMOUNT = 1_000_000
 
 const getInitialStateFromUrl = () => {
   const params = new URLSearchParams(window.location.search)
-  const amount = Math.min(MAX_AMOUNT, parseFormattedNumber(params.get('amount') ?? '0'))
+  const amountParam = params.get('amount')
+  const amount =
+    amountParam === null
+      ? DEFAULT_AMOUNT
+      : Math.min(MAX_AMOUNT, parseFormattedNumber(amountParam))
   const denominationFromUrl = Number(params.get('denom'))
   const denomination = DENOMINATIONS.some((item) => item.value === denominationFromUrl)
     ? denominationFromUrl
