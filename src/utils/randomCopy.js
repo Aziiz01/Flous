@@ -13,3 +13,14 @@ export function pickRandom(arr) {
   if (!arr.length) return ''
   return arr[Math.floor(Math.random() * arr.length)]
 }
+
+/** Fisher–Yates shuffle; deterministic from `seed` (use for sequences that must stay stable per run). */
+export function shuffleArray(array, seed) {
+  const out = [...array]
+  const rand = mulberry32(seed >>> 0)
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rand() * (i + 1))
+    ;[out[i], out[j]] = [out[j], out[i]]
+  }
+  return out
+}

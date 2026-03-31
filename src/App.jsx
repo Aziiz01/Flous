@@ -134,7 +134,7 @@ function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [sceneFocusMode])
 
-  const showStackingToasts = toastSessionActive && scenario.bills > 0 && !sceneFocusMode
+  const showStackingToasts = toastSessionActive && scenario.bills > 0
 
   return (
     <main className="relative h-dvh max-h-dvh w-full overflow-hidden bg-[var(--money-bg)]">
@@ -217,22 +217,22 @@ function App() {
             />
           )}
 
-          {showStackingToasts && (
-            <StackingAnimationToasts
-              key={scenario.runId}
-              isAnimating={isAnimating}
-              totalBills={scenario.bills}
-              liveCounter={liveCounter}
-              runId={scenario.runId}
-            />
-          )}
-
           {showAuthorCredit && !(showScaleOverlay && scenario.bills > 0) && (
             <AuthorCreditBanner visible />
           )}
 
           <RateProjectModal open={showRateModal} onClose={() => setShowRateModal(false)} />
         </div>
+      )}
+
+      {showStackingToasts && (
+        <StackingAnimationToasts
+          key={scenario.runId}
+          isAnimating={isAnimating}
+          totalBills={scenario.bills}
+          liveCounter={liveCounter}
+          runId={scenario.runId}
+        />
       )}
 
       {sceneFocusMode && (
