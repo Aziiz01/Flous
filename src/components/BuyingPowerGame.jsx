@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import { mulberry32, pickFromSeed } from '../utils/randomCopy'
 
 const formatUsd = (n) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
@@ -11,14 +12,83 @@ const formatQtyGuess = (n) => {
   return n.toFixed(2)
 }
 
-function mulberry32(seed) {
-  return () => {
-    let t = (seed += 0x6d2b79f5)
-    t = Math.imul(t ^ (t >>> 15), t | 1)
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
+const INTRO_TEMPLATES = [
+  (usd) =>
+    `Guess how many you can buy at ≈ ${formatUsd(usd)} USD (≈1 USD ≈ 3.1 TND). Three rounds — tap the best answer.`,
+  (usd) =>
+    `Rough budget ≈ ${formatUsd(usd)} USD (≈1 USD ≈ 3.1 TND). Three quick rounds — pick the count that fits.`,
+  (usd) =>
+    `At ≈ ${formatUsd(usd)} USD purchasing power, how many items per round? Three guesses — tap the closest.`,
+  (usd) =>
+    `≈ ${formatUsd(usd)} USD to spend (rate ≈1 USD ≈ 3.1 TND). Three rounds: choose how many you could buy.`,
+]
+
+const QUESTION_PROMPTS = [
+  'How many can you buy?',
+  "What's the max count at this budget?",
+  'Pick the quantity that fits your stack.',
+  'How many units does your money cover?',
+  'Which number matches your buying power?',
+]
+
+const ANSWER_PREFIXES = ['Answer:', 'Exact count:', 'That’s:', 'Correct quantity:', 'Unlocked:']
+
+const NEXT_LABELS = ['Next round', 'Next item', 'Continue', 'Onward']
+
+const FINISH_LABELS = ['Finish', 'See results', 'Done', 'Vault tally']
+
+const END_PERFECT = [
+  'Perfect vault run!',
+  'All three — clean sweep!',
+  'Bullseye on every round!',
+  'Full score — legend status!',
+]
+
+const END_ZERO = [
+  'Tough round — spin again!',
+  'Rough luck — one more try?',
+  'No hits this time — reshuffle!',
+  'The vault stayed closed — retry?',
+]
+
+const END_PARTIAL = [
+  'Solid guesses!',
+  'Not bad at all!',
+  'Mixed bag — still fun!',
+  'Some hits, some misses!',
+  'Room to improve — nice try!',
+]
+
+const SCORE_LINES = [
+  (s, t) => (
+    <>
+      You got <strong className="text-emerald-200">{s}</strong> of {t} right.
+    </>
+  ),
+  (s, t) => (
+    <>
+      Score: <strong className="text-emerald-200">{s}</strong> / {t}.
+    </>
+  ),
+  (s, t) => (
+    <>
+      <strong className="text-emerald-200">{s}</strong> correct out of {t} rounds.
+    </>
+  ),
+  (s, t) => (
+    <>
+      That’s <strong className="text-emerald-200">{s}</strong> hits in {t} tries.
+    </>
+  ),
+]
+
+const PLAY_AGAIN_LABELS = ['Play again', 'Another run', 'Rematch', 'Shuffle rounds']
+
+const EMPTY_POOL_LINES = [
+  'Amount is too small for the mini-game — try a higher TND amount (you can still browse the list below).',
+  'Not enough buying power for three rounds — bump the amount, or scroll the list below.',
+  'This sum is too low for the game — add more TND, or check the reference list underneath.',
+]
 
 function shuffle(array, seed) {
   const out = [...array]
@@ -80,6 +150,7 @@ export default function BuyingPowerGame({ buyRows, amountUsd }) {
   const [revealed, setRevealed] = useState(false)
   const [pickedIdx, setPickedIdx] = useState(null)
   const [done, setDone] = useState(false)
+  const [copySeed, setCopySeed] = useState(() => Math.floor(Math.random() * 1e9))
 
   const q = questions[index]
   const isLast = index >= questions.length - 1
@@ -110,17 +181,37 @@ export default function BuyingPowerGame({ buyRows, amountUsd }) {
     setRevealed(false)
     setPickedIdx(null)
     setDone(false)
+    setCopySeed(Math.floor(Math.random() * 1e9))
   }, [])
+
+  const introText = useMemo(
+    () => pickFromSeed(copySeed, INTRO_TEMPLATES, 1)(amountUsd),
+    [copySeed, amountUsd],
+  )
 
   if (pool.length === 0) {
     return (
       <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-6 text-center text-sm text-zinc-400">
-        Amount is too small for the mini-game — try a higher TND amount (you can still browse the list below).
+        {pickFromSeed(copySeed, EMPTY_POOL_LINES, 0)}
       </p>
     )
   }
 
   if (questions.length === 0) return null
+
+  const questionPrompt = pickFromSeed(copySeed + index, QUESTION_PROMPTS, 3)
+  const answerPrefix = pickFromSeed(copySeed + index, ANSWER_PREFIXES, 4)
+  const nextOrFinish = isLast
+    ? pickFromSeed(copySeed, FINISH_LABELS, 5)
+    : pickFromSeed(copySeed + index, NEXT_LABELS, 6)
+  const endTitle =
+    score === questions.length
+      ? pickFromSeed(copySeed, END_PERFECT, 7)
+      : score === 0
+        ? pickFromSeed(copySeed, END_ZERO, 8)
+        : pickFromSeed(copySeed, END_PARTIAL, 9)
+  const scoreLineEl = pickFromSeed(copySeed, SCORE_LINES, 10)(score, questions.length)
+  const playAgainLabel = pickFromSeed(copySeed, PLAY_AGAIN_LABELS, 11)
 
   return (
     <div className="space-y-4">
@@ -134,9 +225,7 @@ export default function BuyingPowerGame({ buyRows, amountUsd }) {
             Score {score}/{questions.length}
           </span>
         </div>
-        <p className="mt-2 text-xs text-zinc-400">
-          Guess how many you can buy at ≈ {formatUsd(amountUsd)} USD (≈1 USD ≈ 3.1 TND). Three rounds — tap the best answer.
-        </p>
+        <p className="mt-2 text-xs text-zinc-400">{introText}</p>
 
         {!done && q && (
           <div className="mt-4">
@@ -149,7 +238,7 @@ export default function BuyingPowerGame({ buyRows, amountUsd }) {
                 <p className="text-xs text-zinc-500">{formatUsd(q.item.priceUsd)} each</p>
               </div>
             </div>
-            <p className="mt-3 text-sm font-medium text-emerald-200/95">How many can you buy?</p>
+            <p className="mt-3 text-sm font-medium text-emerald-200/95">{questionPrompt}</p>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
               {q.options.map((opt, i) => {
                 const isPicked = pickedIdx === i
@@ -178,14 +267,15 @@ export default function BuyingPowerGame({ buyRows, amountUsd }) {
             {revealed && (
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <p className="text-sm text-zinc-300">
-                  Answer: <strong className="text-[var(--money-gold)]">{formatQtyGuess(q.correct)}</strong>
+                  {answerPrefix}{' '}
+                  <strong className="text-[var(--money-gold)]">{formatQtyGuess(q.correct)}</strong>
                 </p>
                 <button
                   type="button"
                   onClick={next}
                   className="rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-3 py-1.5 text-xs font-semibold text-yellow-100 hover:bg-yellow-500/20"
                 >
-                  {isLast ? 'Finish' : 'Next round'}
+                  {nextOrFinish}
                 </button>
               </div>
             )}
@@ -194,22 +284,14 @@ export default function BuyingPowerGame({ buyRows, amountUsd }) {
 
         {done && (
           <div className="mt-4 text-center">
-            <p className="display-font text-2xl font-extrabold text-[var(--money-gold)]">
-              {score === questions.length
-                ? 'Perfect vault run!'
-                : score === 0
-                  ? 'Tough round — spin again!'
-                  : 'Solid guesses!'}
-            </p>
-            <p className="mt-1 text-sm text-zinc-400">
-              You got <strong className="text-emerald-200">{score}</strong> of {questions.length} right.
-            </p>
+            <p className="display-font text-2xl font-extrabold text-[var(--money-gold)]">{endTitle}</p>
+            <p className="mt-1 text-sm text-zinc-400">{scoreLineEl}</p>
             <button
               type="button"
               onClick={restart}
               className="money-glow mt-3 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-900 px-5 py-2 text-sm font-bold uppercase tracking-wide text-yellow-50"
             >
-              Play again
+              {playAgainLabel}
             </button>
           </div>
         )}

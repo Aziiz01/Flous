@@ -1,4 +1,33 @@
+import { useMemo, useState } from 'react'
 import { DENOMINATIONS } from '../data/denominations'
+import { pickFromSeed } from '../utils/randomCopy'
+
+const HERO_LINES = [
+  () => (
+    <>
+      See your TND amount as stacks of bills. Hit <span className="font-semibold text-yellow-200/95">Visualize</span>{' '}
+      to watch it rain.
+    </>
+  ),
+  () => (
+    <>
+      Turn dinars into a tower of notes. Press <span className="font-semibold text-yellow-200/95">Visualize</span> and let
+      the bills fall.
+    </>
+  ),
+  () => (
+    <>
+      Type an amount, pick a bill, then <span className="font-semibold text-yellow-200/95">Visualize</span> — stacks build
+      in 3D.
+    </>
+  ),
+  () => (
+    <>
+      Your balance, rendered as cash. Tap <span className="font-semibold text-yellow-200/95">Visualize</span> for the full
+      shower.
+    </>
+  ),
+]
 
 const InputPanel = ({
   amountInput,
@@ -9,6 +38,9 @@ const InputPanel = ({
   onOpenRate,
   canVisualize = false,
 }) => {
+  const [heroSeed] = useState(() => Math.floor(Math.random() * 1e9))
+  const heroLine = useMemo(() => pickFromSeed(heroSeed, HERO_LINES, 0)(), [heroSeed])
+
   return (
     <section className="glass rounded-2xl border border-yellow-500/15 p-4 sm:p-5">
       <header className="mb-4 sm:mb-5">
@@ -16,10 +48,7 @@ const InputPanel = ({
         <h1 className="display-font mt-1 text-2xl font-extrabold tracking-tight text-[var(--money-gold)] sm:text-3xl">
           Flous
         </h1>
-        <p className="mt-2 max-w-md text-sm leading-snug text-emerald-100/85">
-          See your TND amount as stacks of bills. Hit <span className="font-semibold text-yellow-200/95">Visualize</span>{' '}
-          to watch it rain.
-        </p>
+        <p className="mt-2 max-w-md text-sm leading-snug text-emerald-100/85">{heroLine}</p>
       </header>
 
       <div className="grid min-w-0 gap-3 md:grid-cols-[1.15fr_0.75fr_auto_auto] md:items-end">

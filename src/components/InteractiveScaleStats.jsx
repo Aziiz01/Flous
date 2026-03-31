@@ -1,4 +1,36 @@
 import { useMemo, useState } from 'react'
+import { pickFromSeed } from '../utils/randomCopy'
+
+const SCALE_TOP_HINTS = [
+  'Tap a reference to compare — bars scale to the larger value in each pair.',
+  'Pick a landmark chip — both bars stretch to match the bigger side.',
+  'Switch references anytime — your stack stays on the left.',
+  'Compare interactively: tap options below each stat to swap the benchmark.',
+]
+
+const HEIGHT_SUFFIXES = [
+  'the reference height (stack thickness vs that landmark).',
+  'of that landmark’s height — your stack thickness vs the bar.',
+  'as tall as that reference (stack thickness vs height).',
+]
+
+const AREA_SUFFIXES = [
+  'that area.',
+  'the footprint of that reference.',
+  'how much ground that landmark covers.',
+]
+
+const VOL_SUFFIXES = [
+  'that volume.',
+  'the space that reference fills.',
+  'that container’s volume.',
+]
+
+const WEIGHT_SUFFIXES = [
+  'that mass.',
+  'the reference weight.',
+  'how heavy that comparison is.',
+]
 
 const HEIGHT_REFS = [
   { m: 1.75, label: 'Adult (~1.75 m)' },
@@ -56,10 +88,17 @@ function DualBar({ leftLabel, rightLabel, leftPct, rightPct, leftTone, rightTone
 }
 
 export default function InteractiveScaleStats({ physics }) {
+  const [copySeed] = useState(() => Math.floor(Math.random() * 1e9))
   const [hi, setHi] = useState(1)
   const [ai, setAi] = useState(1)
   const [vi, setVi] = useState(1)
   const [wi, setWi] = useState(1)
+
+  const topHint = pickFromSeed(copySeed, SCALE_TOP_HINTS, 0)
+  const heightSuffix = pickFromSeed(copySeed, HEIGHT_SUFFIXES, 1)
+  const areaSuffix = pickFromSeed(copySeed, AREA_SUFFIXES, 2)
+  const volSuffix = pickFromSeed(copySeed, VOL_SUFFIXES, 3)
+  const weightSuffix = pickFromSeed(copySeed, WEIGHT_SUFFIXES, 4)
 
   const { hRatio, aRatio, vRatio, wRatio, bars } = useMemo(() => {
     const hRef = HEIGHT_REFS[hi]
@@ -106,9 +145,7 @@ export default function InteractiveScaleStats({ physics }) {
 
   return (
     <div className="space-y-4">
-      <p className="text-center text-[11px] text-zinc-500 md:text-left">
-        Tap a reference to compare — bars scale to the larger value in each pair.
-      </p>
+      <p className="text-center text-[11px] text-zinc-500 md:text-left">{topHint}</p>
 
       <div className={statCardClass}>
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-200/85">Height</p>
@@ -138,8 +175,7 @@ export default function InteractiveScaleStats({ physics }) {
           rightTone="bg-gradient-to-t from-zinc-700 to-zinc-400"
         />
         <p className="mt-2 text-sm text-emerald-200/90">
-          ≈ <strong>{hRatio < 0.01 ? hRatio.toExponential(2) : hRatio.toFixed(2)}×</strong> the reference height
-          (stack thickness vs that landmark).
+          ≈ <strong>{hRatio < 0.01 ? hRatio.toExponential(2) : hRatio.toFixed(2)}×</strong> {heightSuffix}
         </p>
       </div>
 
@@ -166,7 +202,7 @@ export default function InteractiveScaleStats({ physics }) {
           rightTone="bg-gradient-to-t from-slate-700 to-slate-400"
         />
         <p className="mt-2 text-sm text-emerald-200/90">
-          ≈ <strong>{aRatio < 0.01 ? aRatio.toExponential(2) : aRatio.toFixed(2)}×</strong> that area.
+          ≈ <strong>{aRatio < 0.01 ? aRatio.toExponential(2) : aRatio.toFixed(2)}×</strong> {areaSuffix}
         </p>
       </div>
 
@@ -193,7 +229,7 @@ export default function InteractiveScaleStats({ physics }) {
           rightTone="bg-gradient-to-t from-indigo-900 to-indigo-500/70"
         />
         <p className="mt-2 text-sm text-sky-200/90">
-          ≈ <strong>{vRatio < 0.01 ? vRatio.toExponential(2) : vRatio.toFixed(2)}×</strong> that volume.
+          ≈ <strong>{vRatio < 0.01 ? vRatio.toExponential(2) : vRatio.toFixed(2)}×</strong> {volSuffix}
         </p>
       </div>
 
@@ -220,7 +256,7 @@ export default function InteractiveScaleStats({ physics }) {
           rightTone="bg-gradient-to-t from-fuchsia-900 to-fuchsia-600/70"
         />
         <p className="mt-2 text-sm text-violet-200/90">
-          ≈ <strong>{wRatio < 0.01 ? wRatio.toExponential(2) : wRatio.toFixed(2)}×</strong> that mass.
+          ≈ <strong>{wRatio < 0.01 ? wRatio.toExponential(2) : wRatio.toFixed(2)}×</strong> {weightSuffix}
         </p>
       </div>
     </div>
