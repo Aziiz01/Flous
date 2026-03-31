@@ -4,7 +4,7 @@ import AuthorCreditBanner from './AuthorCreditBanner'
 import BuyingPowerGame from './BuyingPowerGame'
 import InteractiveScaleStats from './InteractiveScaleStats'
 import { PURCHASABLE_ITEMS, TND_TO_USD } from '../data/purchasableItems'
-import { BILL_LENGTH_M, BILL_THICKNESS_M, BILL_WIDTH_M, computeStackPhysics } from '../utils/scaleComparisons'
+import { computeStackPhysics } from '../utils/scaleComparisons'
 
 const formatUsd = (n) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
@@ -152,16 +152,6 @@ const ScaleComparisonOverlay = ({
           <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5">
             {tab === 'scale' && (
               <div ref={scaleContentRef} className="space-y-4">
-                <div
-                  data-stagger-card
-                  className="rounded-xl border border-dashed border-yellow-500/25 bg-emerald-900/30 px-3 py-2.5 text-center text-[11px] leading-relaxed text-zinc-400 md:text-xs"
-                >
-                  Model uses standard US note size:{' '}
-                  <span className="font-medium text-zinc-300">
-                    {BILL_LENGTH_M * 100} × {BILL_WIDTH_M * 100} × {(BILL_THICKNESS_M * 100).toFixed(2)} cm
-                  </span>{' '}
-                  per bill — tap references below to compare your stack.
-                </div>
                 <InteractiveScaleStats physics={physics} />
               </div>
             )}
