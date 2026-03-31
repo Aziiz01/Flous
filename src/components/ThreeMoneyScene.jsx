@@ -8,8 +8,6 @@ const BASE_STACK_HEIGHT = 1.15
 const MAX_ACTIVE_FALLING = 4500
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
-const raycaster = new THREE.Raycaster()
-const pointerNdc = new THREE.Vector2(2, 2)
 
 const NOTE_STYLE_BY_DENOM = {
   1: { base: '#6b7b2f', accent: '#d9e68b', dark: '#2a3411', stripe: '#9ebb46' },
@@ -253,43 +251,12 @@ const computeGrid = (count) => {
   return { cols, rows }
 }
 
-const createStackLabelSprite = (label) => {
-  const canvas = document.createElement('canvas')
-  canvas.width = 512
-  canvas.height = 128
-  const ctx = canvas.getContext('2d')
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  ctx.fillStyle = 'rgba(4, 8, 10, 0.72)'
-  ctx.fillRect(20, 20, canvas.width - 40, canvas.height - 40)
-  ctx.strokeStyle = 'rgba(232, 207, 106, 0.75)'
-  ctx.lineWidth = 4
-  ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40)
-  ctx.fillStyle = '#fef3c7'
-  ctx.textAlign = 'center'
-  ctx.font = 'bold 42px Inter, sans-serif'
-  ctx.fillText(label, canvas.width / 2, canvas.height / 2 + 14)
-
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-  const material = new THREE.SpriteMaterial({
-    map: texture,
-    transparent: true,
-    depthTest: false,
-  })
-  const sprite = new THREE.Sprite(material)
-  sprite.scale.set(2.1, 0.5, 1)
-  sprite.visible = false
-
-  return { sprite, texture, material }
-}
-
 const createStackMesh = ({
   scene,
   x,
   z,
   capacityBills,
   maxVisibleHeight,
-  stackLabel,
   sideMaterial,
   topMaterial,
   bottomMaterial,
@@ -308,19 +275,14 @@ const createStackMesh = ({
   mesh.position.set(x, 0.005, z)
   mesh.scale.y = 0.01
   scene.add(mesh)
-  const label = createStackLabelSprite(stackLabel)
-  label.sprite.position.set(x, 0.4, z)
-  scene.add(label.sprite)
 
   return {
     mesh,
-    label,
     x,
     z,
     capacityBills,
     currentBills: 0,
     maxVisibleHeight,
-    labelShown: false,
     stackIndex: -1,
   }
 }
@@ -332,7 +294,6 @@ const updateStackHeight = (stack) => {
   const nextHeight = Math.max(0.01, fillRatio * stack.maxVisibleHeight)
   stack.mesh.scale.y = nextHeight
   stack.mesh.position.y = nextHeight * 0.5
-  stack.label.sprite.position.y = nextHeight + 0.3
 }
 
 const createFallingBillMesh = (billMaterials) => {
@@ -506,38 +467,8 @@ const ThreeMoneyScene = ({
       renderer.setSize(width, height)
     }
 
-    const updateHoveredStack = () => {
-      const currentRun = runStateRef.current
-      if (!currentRun?.stacks?.length) return
-
-      raycaster.setFromCamera(pointerNdc, camera)
-      const intersections = raycaster.intersectObjects(
-        currentRun.stacks.map((stack) => stack.mesh),
-        false,
-      )
-      const hoveredMesh = intersections[0]?.object ?? null
-      currentRun.hoveredStackIndex = hoveredMesh
-        ? currentRun.stacks.findIndex((stack) => stack.mesh === hoveredMesh)
-        : -1
-    }
-
-    const onPointerMove = (event) => {
-      const rect = renderer.domElement.getBoundingClientRect()
-      pointerNdc.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-      pointerNdc.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
-      updateHoveredStack()
-    }
-
-    const onPointerLeave = () => {
-      pointerNdc.set(2, 2)
-      const currentRun = runStateRef.current
-      if (currentRun) currentRun.hoveredStackIndex = -1
-    }
-
     setSize()
     window.addEventListener('resize', setSize)
-    renderer.domElement.addEventListener('pointermove', onPointerMove)
-    renderer.domElement.addEventListener('pointerleave', onPointerLeave)
 
     coreRef.current = { scene, camera, renderer, controls, clock, orbitAngle }
 
@@ -613,10 +544,6 @@ const ThreeMoneyScene = ({
           }
         }
 
-        currentRun.stacks.forEach((stack, index) => {
-          stack.label.sprite.visible = currentRun.hoveredStackIndex === index
-        })
-
         if (currentRun.landedBills !== currentRun.reportedLanded) {
           currentRun.reportedLanded = currentRun.landedBills
           progressCallbackRef.current(currentRun.landedBills)
@@ -649,8 +576,6 @@ const ThreeMoneyScene = ({
 
     return () => {
       window.removeEventListener('resize', setSize)
-      renderer.domElement.removeEventListener('pointermove', onPointerMove)
-      renderer.domElement.removeEventListener('pointerleave', onPointerLeave)
       controls.dispose()
       renderer.dispose()
       mount.removeChild(renderer.domElement)
@@ -668,9 +593,6 @@ const ThreeMoneyScene = ({
       previous.stacks?.forEach((stack) => {
         core.scene.remove(stack.mesh)
         stack.mesh.geometry.dispose()
-        core.scene.remove(stack.label.sprite)
-        stack.label.texture.dispose()
-        stack.label.material.dispose()
       })
       previous.activeFalling?.forEach((falling) => {
         core.scene.remove(falling.mesh)
@@ -751,7 +673,6 @@ const ThreeMoneyScene = ({
         z,
         capacityBills,
         maxVisibleHeight: visibleHeight,
-        stackLabel: `Stack ${index + 1}/${plan.renderedStackCount}`,
         sideMaterial,
         topMaterial: frontMaterial,
         bottomMaterial,
@@ -782,7 +703,6 @@ const ThreeMoneyScene = ({
       spawnQueue,
       animatedBillCount,
       activeFalling: [],
-      hoveredStackIndex: -1,
       billMaterials: [sideMaterial, sideMaterial, frontMaterial, backMaterial, sideMaterial, sideMaterial],
       textures,
       materials: {

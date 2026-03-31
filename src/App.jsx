@@ -143,13 +143,17 @@ function App() {
 
           {scenario.bills > 0 && (
             <div
-              className={`pointer-events-auto flex w-full max-w-[min(100vw-1rem,22rem)] flex-col items-center rounded-2xl border border-yellow-500/25 bg-emerald-950/55 px-3 py-2 shadow-lg shadow-black/30 backdrop-blur-md sm:max-w-md sm:px-4 ${
+              className={`pointer-events-auto flex w-full max-w-[min(100vw-1rem,22rem)] flex-col rounded-2xl border border-yellow-500/25 bg-emerald-950/55 px-3 py-2 shadow-lg shadow-black/30 backdrop-blur-md sm:max-w-md sm:px-4 ${
                 isAnimating
-                  ? 'fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-20 -translate-x-1/2'
-                  : 'mx-auto mt-2'
+                  ? 'fixed left-auto right-[max(0.5rem,env(safe-area-inset-right))] top-[max(0.5rem,env(safe-area-inset-top))] z-20 items-end text-right'
+                  : 'mx-auto mt-2 items-center text-center'
               }`}
             >
-              <p className="display-font text-center text-base font-bold tabular-nums text-[var(--money-gold)] sm:text-lg">
+              <p
+                className={`display-font text-base font-bold tabular-nums text-[var(--money-gold)] sm:text-lg ${
+                  isAnimating ? 'text-right' : 'text-center'
+                }`}
+              >
                 {formatNumber(liveCounter)}
                 <span className="text-sm font-semibold text-emerald-200/90 sm:text-base">
                   /{formatNumber(scenario.bills)} bills
@@ -164,7 +168,7 @@ function App() {
                 <button
                   type="button"
                   onClick={() => setSkipInstantToken((n) => n + 1)}
-                  className="mt-2 touch-manipulation rounded-full border border-yellow-500/40 bg-emerald-900/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-yellow-100 transition hover:bg-emerald-800/60"
+                  className="mt-2 self-end touch-manipulation rounded-full border border-yellow-500/40 bg-emerald-900/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-yellow-100 transition hover:bg-emerald-800/60"
                 >
                   Skip
                 </button>
