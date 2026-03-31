@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { mulberry32, pickFromSeed } from '../utils/randomCopy'
+import { mulberry32, pickRandom } from '../utils/randomCopy'
 
 const formatUsd = (n) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
@@ -150,7 +150,7 @@ export default function BuyingPowerGame({ buyRows, amountUsd }) {
   const [revealed, setRevealed] = useState(false)
   const [pickedIdx, setPickedIdx] = useState(null)
   const [done, setDone] = useState(false)
-  const [copySeed, setCopySeed] = useState(() => Math.floor(Math.random() * 1e9))
+  const [copyTick, setCopyTick] = useState(0)
 
   const q = questions[index]
   const isLast = index >= questions.length - 1
@@ -181,37 +181,44 @@ export default function BuyingPowerGame({ buyRows, amountUsd }) {
     setRevealed(false)
     setPickedIdx(null)
     setDone(false)
-    setCopySeed(Math.floor(Math.random() * 1e9))
+    setCopyTick((t) => t + 1)
   }, [])
 
   const introText = useMemo(
-    () => pickFromSeed(copySeed, INTRO_TEMPLATES, 1)(amountUsd),
-    [copySeed, amountUsd],
+    () => pickRandom(INTRO_TEMPLATES)(amountUsd),
+    [copyTick, amountUsd],
   )
+
+  const emptyPoolLine = useMemo(() => pickRandom(EMPTY_POOL_LINES), [copyTick])
+
+  const questionPrompt = useMemo(() => pickRandom(QUESTION_PROMPTS), [copyTick, index])
+  const answerPrefix = useMemo(() => pickRandom(ANSWER_PREFIXES), [copyTick, index])
+  const nextOrFinish = useMemo(
+    () => (isLast ? pickRandom(FINISH_LABELS) : pickRandom(NEXT_LABELS)),
+    [copyTick, index, isLast],
+  )
+  const endTitle = useMemo(() => {
+    if (questions.length === 0) return ''
+    if (score === questions.length) return pickRandom(END_PERFECT)
+    if (score === 0) return pickRandom(END_ZERO)
+    return pickRandom(END_PARTIAL)
+  }, [copyTick, score, questions.length])
+  const scoreLineEl = useMemo(
+    () =>
+      questions.length > 0 ? pickRandom(SCORE_LINES)(score, questions.length) : null,
+    [copyTick, score, questions.length],
+  )
+  const playAgainLabel = useMemo(() => pickRandom(PLAY_AGAIN_LABELS), [copyTick])
 
   if (pool.length === 0) {
     return (
       <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-6 text-center text-sm text-zinc-400">
-        {pickFromSeed(copySeed, EMPTY_POOL_LINES, 0)}
+        {emptyPoolLine}
       </p>
     )
   }
 
   if (questions.length === 0) return null
-
-  const questionPrompt = pickFromSeed(copySeed + index, QUESTION_PROMPTS, 3)
-  const answerPrefix = pickFromSeed(copySeed + index, ANSWER_PREFIXES, 4)
-  const nextOrFinish = isLast
-    ? pickFromSeed(copySeed, FINISH_LABELS, 5)
-    : pickFromSeed(copySeed + index, NEXT_LABELS, 6)
-  const endTitle =
-    score === questions.length
-      ? pickFromSeed(copySeed, END_PERFECT, 7)
-      : score === 0
-        ? pickFromSeed(copySeed, END_ZERO, 8)
-        : pickFromSeed(copySeed, END_PARTIAL, 9)
-  const scoreLineEl = pickFromSeed(copySeed, SCORE_LINES, 10)(score, questions.length)
-  const playAgainLabel = pickFromSeed(copySeed, PLAY_AGAIN_LABELS, 11)
 
   return (
     <div className="space-y-4">

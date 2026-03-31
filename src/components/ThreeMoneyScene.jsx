@@ -358,6 +358,8 @@ const ThreeMoneyScene = ({
   onProgress,
   onComplete,
   onMeta,
+  sceneFocusMode = false,
+  onFocusScene,
 }) => {
   const mountRef = useRef(null)
   const coreRef = useRef(null)
@@ -365,12 +367,30 @@ const ThreeMoneyScene = ({
   const progressCallbackRef = useRef(onProgress)
   const completeCallbackRef = useRef(onComplete)
   const metaCallbackRef = useRef(onMeta)
+  const onFocusSceneRef = useRef(onFocusScene)
+  const totalBillsRef = useRef(totalBills)
+
+  onFocusSceneRef.current = onFocusScene
+  totalBillsRef.current = totalBills
 
   useEffect(() => {
     progressCallbackRef.current = onProgress
     completeCallbackRef.current = onComplete
     metaCallbackRef.current = onMeta
   }, [onProgress, onComplete, onMeta])
+
+  useEffect(() => {
+    const core = coreRef.current
+    if (!core?.controls) return
+    if (sceneFocusMode) {
+      core.controls.enabled = true
+      return
+    }
+    const run = runStateRef.current
+    if (run) {
+      core.controls.enabled = !!run.completed
+    }
+  }, [sceneFocusMode, runId])
 
   useEffect(() => {
     if (skipInstantToken === 0) return
@@ -469,6 +489,12 @@ const ThreeMoneyScene = ({
 
     setSize()
     window.addEventListener('resize', setSize)
+
+    const handleCanvasClick = () => {
+      if (totalBillsRef.current <= 0) return
+      onFocusSceneRef.current?.()
+    }
+    renderer.domElement.addEventListener('click', handleCanvasClick)
 
     coreRef.current = { scene, camera, renderer, controls, clock, orbitAngle }
 
@@ -575,6 +601,7 @@ const ThreeMoneyScene = ({
     requestAnimationFrame(animate)
 
     return () => {
+      renderer.domElement.removeEventListener('click', handleCanvasClick)
       window.removeEventListener('resize', setSize)
       controls.dispose()
       renderer.dispose()

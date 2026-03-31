@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { DENOMINATIONS } from '../data/denominations'
-import { pickFromSeed } from '../utils/randomCopy'
+import { pickRandom } from '../utils/randomCopy'
 
 const HERO_LINES = [
   () => (
@@ -38,8 +38,7 @@ const InputPanel = ({
   onOpenRate,
   canVisualize = false,
 }) => {
-  const [heroSeed] = useState(() => Math.floor(Math.random() * 1e9))
-  const heroLine = useMemo(() => pickFromSeed(heroSeed, HERO_LINES, 0)(), [heroSeed])
+  const heroLine = useMemo(() => pickRandom(HERO_LINES)(), [])
 
   return (
     <section className="glass rounded-2xl border border-yellow-500/15 p-4 sm:p-5">

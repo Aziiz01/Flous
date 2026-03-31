@@ -23,6 +23,10 @@ All project code, assets, and documentation in this repository were created by M
 - **Feedback** — Rate-project flow with EmailJS (configure your own keys in `src/config/emailjs.js`).
 - **URL state** — Shareable links via `amount` and `denom` query parameters.
 
+## SEO
+
+`index.html` includes primary meta tags, Open Graph and Twitter cards, and JSON-LD (`WebApplication`). `public/robots.txt` and `public/sitemap.xml` reference the canonical site URL. Defaults target GitHub Pages at `https://aziiz01.github.io/Flous/` — if you deploy elsewhere, replace that base URL in those files and in `index.html` (canonical, `og:url`, and structured data).
+
 ---
 
 ## Tech stack

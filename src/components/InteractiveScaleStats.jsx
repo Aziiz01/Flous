@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { pickFromSeed } from '../utils/randomCopy'
+import { pickRandom } from '../utils/randomCopy'
 
 const SCALE_TOP_HINTS = [
   'Tap a reference to compare — bars scale to the larger value in each pair.',
@@ -88,17 +88,26 @@ function DualBar({ leftLabel, rightLabel, leftPct, rightPct, leftTone, rightTone
 }
 
 export default function InteractiveScaleStats({ physics }) {
-  const [copySeed] = useState(() => Math.floor(Math.random() * 1e9))
   const [hi, setHi] = useState(1)
   const [ai, setAi] = useState(1)
   const [vi, setVi] = useState(1)
   const [wi, setWi] = useState(1)
 
-  const topHint = pickFromSeed(copySeed, SCALE_TOP_HINTS, 0)
-  const heightSuffix = pickFromSeed(copySeed, HEIGHT_SUFFIXES, 1)
-  const areaSuffix = pickFromSeed(copySeed, AREA_SUFFIXES, 2)
-  const volSuffix = pickFromSeed(copySeed, VOL_SUFFIXES, 3)
-  const weightSuffix = pickFromSeed(copySeed, WEIGHT_SUFFIXES, 4)
+  const { topHint, heightSuffix, areaSuffix, volSuffix, weightSuffix } = useMemo(
+    () => ({
+      topHint: pickRandom(SCALE_TOP_HINTS),
+      heightSuffix: pickRandom(HEIGHT_SUFFIXES),
+      areaSuffix: pickRandom(AREA_SUFFIXES),
+      volSuffix: pickRandom(VOL_SUFFIXES),
+      weightSuffix: pickRandom(WEIGHT_SUFFIXES),
+    }),
+    [
+      physics.totalHeightM,
+      physics.totalGroundAreaM2,
+      physics.volumeM3,
+      physics.weightKg,
+    ],
+  )
 
   const { hRatio, aRatio, vRatio, wRatio, bars } = useMemo(() => {
     const hRef = HEIGHT_REFS[hi]

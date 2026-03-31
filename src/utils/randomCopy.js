@@ -1,4 +1,4 @@
-/** Deterministic PRNG for picking copy variants from a seed (e.g. session / restart). */
+/** Deterministic PRNG for game logic (options, shuffle). */
 export function mulberry32(seed) {
   return () => {
     let t = (seed += 0x6d2b79f5)
@@ -8,8 +8,8 @@ export function mulberry32(seed) {
   }
 }
 
-export function pickFromSeed(seed, arr, salt = 0) {
+/** True random pick — use for UI copy so lines actually vary each time. */
+export function pickRandom(arr) {
   if (!arr.length) return ''
-  const rand = mulberry32(seed + salt * 10_007)
-  return arr[Math.floor(rand() * arr.length)]
+  return arr[Math.floor(Math.random() * arr.length)]
 }

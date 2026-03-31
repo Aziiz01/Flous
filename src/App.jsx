@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import AuthorCreditBanner from './components/AuthorCreditBanner'
 import InputPanel from './components/InputPanel'
@@ -48,6 +48,9 @@ function App() {
   const [toastSessionActive, setToastSessionActive] = useState(false)
   const [showRateModal, setShowRateModal] = useState(false)
   const [skipInstantToken, setSkipInstantToken] = useState(0)
+  /** Full-screen money view: hide chrome, orbit freely; Back returns to menu. */
+  const [sceneFocusMode, setSceneFocusMode] = useState(false)
+  const [scaleOverlayKey, setScaleOverlayKey] = useState(0)
   const [sceneMeta, setSceneMeta] = useState({
     stackCount: 0,
     renderedStackCount: 0,
@@ -73,6 +76,7 @@ function App() {
 
   const handleVisualize = () => {
     const bills = billCount
+    setSceneFocusMode(false)
     setScenario((previous) => ({
       amount: currentAmount,
       denomination,
@@ -110,7 +114,27 @@ function App() {
     setSceneMeta(meta)
   }, [])
 
-  const showStackingToasts = toastSessionActive && scenario.bills > 0
+  const handleSceneFocus = useCallback(() => {
+    if (scenario.bills <= 0) return
+    setSceneFocusMode(true)
+    setShowScaleOverlay(false)
+  }, [scenario.bills])
+
+  const openScaleInsights = useCallback(() => {
+    setScaleOverlayKey((k) => k + 1)
+    setShowScaleOverlay(true)
+  }, [])
+
+  useEffect(() => {
+    if (!sceneFocusMode) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') setSceneFocusMode(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [sceneFocusMode])
+
+  const showStackingToasts = toastSessionActive && scenario.bills > 0 && !sceneFocusMode
 
   return (
     <main className="relative h-dvh max-h-dvh w-full overflow-hidden bg-[var(--money-bg)]">
@@ -119,96 +143,107 @@ function App() {
         denomination={scenario.denomination}
         runId={scenario.runId}
         skipInstantToken={skipInstantToken}
+        sceneFocusMode={sceneFocusMode}
+        onFocusScene={handleSceneFocus}
         onProgress={handleSceneProgress}
         onComplete={handleSceneComplete}
         onMeta={handleSceneMeta}
       />
 
-      <div className="pointer-events-none absolute inset-0 z-10 overflow-y-auto overflow-x-hidden overscroll-y-contain">
-        <div className="flex w-full flex-col items-center px-[max(0.75rem,env(safe-area-inset-left))] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.35rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))] md:pb-4 md:pt-2">
-          <div
-            ref={overlayRef}
-            className={`pointer-events-auto w-full max-w-lg p-2 sm:p-3 md:max-w-xl md:p-4 ${isAnimating ? 'max-md:hidden' : ''}`}
-          >
-            <InputPanel
-              amountInput={amountInput}
-              denomination={denomination}
-              setAmountInput={handleAmountInput}
-              setDenomination={setDenomination}
-              onVisualize={handleVisualize}
-              onOpenRate={() => setShowRateModal(true)}
-              canVisualize={billCount > 0}
-            />
-          </div>
-
-          {scenario.bills > 0 && (
+      {!sceneFocusMode && (
+        <div className="pointer-events-none absolute inset-0 z-10 overflow-y-auto overflow-x-hidden overscroll-y-contain">
+          <div className="flex w-full flex-col items-center px-[max(0.75rem,env(safe-area-inset-left))] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.35rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))] md:pb-4 md:pt-2">
             <div
-              className={`pointer-events-auto flex w-full max-w-[min(100vw-1rem,22rem)] flex-col rounded-2xl border border-yellow-500/25 bg-emerald-950/55 px-3 py-2 shadow-lg shadow-black/30 backdrop-blur-md sm:max-w-md sm:px-4 ${
-                isAnimating
-                  ? 'fixed left-auto right-[max(0.5rem,env(safe-area-inset-right))] top-[max(0.5rem,env(safe-area-inset-top))] z-20 items-end text-right'
-                  : 'mx-auto mt-2 items-center text-center'
-              }`}
+              ref={overlayRef}
+              className={`pointer-events-auto w-full max-w-lg p-2 sm:p-3 md:max-w-xl md:p-4 ${isAnimating ? 'max-md:hidden' : ''}`}
             >
-              <p
-                className={`display-font text-base font-bold tabular-nums text-[var(--money-gold)] sm:text-lg ${
-                  isAnimating ? 'text-right' : 'text-center'
+              <InputPanel
+                amountInput={amountInput}
+                denomination={denomination}
+                setAmountInput={handleAmountInput}
+                setDenomination={setDenomination}
+                onVisualize={handleVisualize}
+                onOpenRate={() => setShowRateModal(true)}
+                canVisualize={billCount > 0}
+              />
+            </div>
+
+            {scenario.bills > 0 && (
+              <div
+                className={`pointer-events-auto flex w-full max-w-[min(100vw-1rem,22rem)] flex-col items-center rounded-2xl border border-yellow-500/25 bg-emerald-950/55 px-3 py-2 text-center shadow-lg shadow-black/30 backdrop-blur-md sm:max-w-md sm:px-4 ${
+                  isAnimating
+                    ? 'fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-20 -translate-x-1/2'
+                    : 'mx-auto mt-2'
                 }`}
               >
-                {formatNumber(liveCounter)}
-                <span className="text-sm font-semibold text-emerald-200/90 sm:text-base">
-                  /{formatNumber(scenario.bills)} bills
-                </span>
-              </p>
-              {!isAnimating && (
-                <p className="mt-0.5 text-center text-[10px] text-emerald-400/80">
-                  {formatNumber(sceneMeta.stackBillCapacity)} bills per stack
+                <p className="display-font text-base font-bold tabular-nums text-[var(--money-gold)] sm:text-lg">
+                  {formatNumber(liveCounter)}
+                  <span className="text-sm font-semibold text-emerald-200/90 sm:text-base">
+                    /{formatNumber(scenario.bills)} bills
+                  </span>
                 </p>
-              )}
-              {isAnimating && (
-                <button
-                  type="button"
-                  onClick={() => setSkipInstantToken((n) => n + 1)}
-                  className="mt-2 self-end touch-manipulation rounded-full border border-yellow-500/40 bg-emerald-900/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-yellow-100 transition hover:bg-emerald-800/60"
-                >
-                  Skip
-                </button>
-              )}
-            </div>
+                {!isAnimating && (
+                  <p className="mt-0.5 text-center text-[10px] text-emerald-400/80">
+                    {formatNumber(sceneMeta.stackBillCapacity)} bills per stack
+                  </p>
+                )}
+                {isAnimating && (
+                  <button
+                    type="button"
+                    onClick={() => setSkipInstantToken((n) => n + 1)}
+                    className="mt-2 touch-manipulation rounded-full border border-yellow-500/40 bg-emerald-900/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-yellow-100 transition hover:bg-emerald-800/60"
+                  >
+                    Skip
+                  </button>
+                )}
+              </div>
+            )}
+
+            {insightsUnlocked && scenario.bills > 0 && !showScaleOverlay && (
+              <div className="pointer-events-auto mt-3 w-full max-w-lg px-1 sm:px-2">
+                <ScaleInsightsDock onOpen={openScaleInsights} />
+              </div>
+            )}
+          </div>
+
+          {showScaleOverlay && scenario.bills > 0 && (
+            <ScaleComparisonOverlay
+              key={scaleOverlayKey}
+              open={showScaleOverlay}
+              onDismiss={() => setShowScaleOverlay(false)}
+              amountTnd={scenario.amount}
+              totalBills={scenario.bills}
+              renderedStackCount={Math.max(1, sceneMeta.renderedStackCount || 1)}
+            />
           )}
 
-          {insightsUnlocked && scenario.bills > 0 && !showScaleOverlay && (
-            <div className="pointer-events-auto mt-3 w-full max-w-lg px-1 sm:px-2">
-              <ScaleInsightsDock onOpen={() => setShowScaleOverlay(true)} />
-            </div>
+          {showStackingToasts && (
+            <StackingAnimationToasts
+              key={scenario.runId}
+              isAnimating={isAnimating}
+              totalBills={scenario.bills}
+              liveCounter={liveCounter}
+              runId={scenario.runId}
+            />
           )}
+
+          {showAuthorCredit && !(showScaleOverlay && scenario.bills > 0) && (
+            <AuthorCreditBanner visible />
+          )}
+
+          <RateProjectModal open={showRateModal} onClose={() => setShowRateModal(false)} />
         </div>
+      )}
 
-        {showScaleOverlay && scenario.bills > 0 && (
-          <ScaleComparisonOverlay
-            open={showScaleOverlay}
-            onDismiss={() => setShowScaleOverlay(false)}
-            amountTnd={scenario.amount}
-            totalBills={scenario.bills}
-            renderedStackCount={Math.max(1, sceneMeta.renderedStackCount || 1)}
-          />
-        )}
-
-        {showStackingToasts && (
-          <StackingAnimationToasts
-            key={scenario.runId}
-            isAnimating={isAnimating}
-            totalBills={scenario.bills}
-            liveCounter={liveCounter}
-            runId={scenario.runId}
-          />
-        )}
-
-        {showAuthorCredit && !(showScaleOverlay && scenario.bills > 0) && (
-          <AuthorCreditBanner visible />
-        )}
-
-        <RateProjectModal open={showRateModal} onClose={() => setShowRateModal(false)} />
-      </div>
+      {sceneFocusMode && (
+        <button
+          type="button"
+          onClick={() => setSceneFocusMode(false)}
+          className="pointer-events-auto fixed left-[max(0.75rem,env(safe-area-inset-left))] top-[max(0.75rem,env(safe-area-inset-top))] z-50 rounded-xl border border-yellow-500/40 bg-emerald-950/90 px-4 py-2.5 text-sm font-semibold text-yellow-100 shadow-lg backdrop-blur-md transition hover:border-yellow-400/55 hover:bg-emerald-900/95"
+        >
+          ← Back to menu
+        </button>
+      )}
     </main>
   )
 }
