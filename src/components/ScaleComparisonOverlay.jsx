@@ -1,17 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import AuthorCreditBanner from './AuthorCreditBanner'
+import BuyingPowerGame from './BuyingPowerGame'
+import InteractiveScaleStats from './InteractiveScaleStats'
 import { PURCHASABLE_ITEMS, TND_TO_USD } from '../data/purchasableItems'
-import {
-  BILL_LENGTH_M,
-  BILL_THICKNESS_M,
-  BILL_WIDTH_M,
-  areaComparison,
-  computeStackPhysics,
-  heightComparison,
-  volumeComparison,
-  weightComparison,
-} from '../utils/scaleComparisons'
+import { BILL_LENGTH_M, BILL_THICKNESS_M, BILL_WIDTH_M, computeStackPhysics } from '../utils/scaleComparisons'
 
 const formatUsd = (n) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
@@ -40,12 +33,6 @@ const buildPurchasableRows = (amountTnd) => {
   return { rows, amountUsd }
 }
 
-const statCardClass =
-  'data-stagger-card group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-br from-zinc-900/90 via-zinc-950/70 to-black/50 p-4 pl-5 shadow-inner shadow-black/20 md:p-5 md:pl-6'
-
-const accentBar = (from, to) =>
-  `pointer-events-none absolute left-0 top-0 h-full w-1 bg-gradient-to-b ${from} ${to} opacity-90`
-
 const ScaleComparisonOverlay = ({
   open,
   onDismiss,
@@ -62,11 +49,6 @@ const ScaleComparisonOverlay = ({
   const buyContentRef = useRef(null)
 
   const physics = computeStackPhysics(totalBills, renderedStackCount)
-  const seed = totalBills
-  const hComp = heightComparison(physics.totalHeightM, seed)
-  const aComp = areaComparison(physics.totalGroundAreaM2, seed + 1)
-  const vComp = volumeComparison(physics.volumeM3, seed + 2)
-  const wComp = weightComparison(physics.weightKg, seed + 3)
   const { rows: buyRows, amountUsd } = buildPurchasableRows(amountTnd)
 
   useLayoutEffect(() => {
@@ -154,8 +136,8 @@ const ScaleComparisonOverlay = ({
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
-                <span className="sm:hidden">Buying power</span>
-                <span className="hidden sm:inline">What Can This Buy?</span>
+                <span className="sm:hidden">Buy game</span>
+                <span className="hidden sm:inline">Buying power game</span>
               </button>
             </div>
             <button
@@ -178,104 +160,9 @@ const ScaleComparisonOverlay = ({
                   <span className="font-medium text-zinc-300">
                     {BILL_LENGTH_M * 100} × {BILL_WIDTH_M * 100} × {(BILL_THICKNESS_M * 100).toFixed(2)} cm
                   </span>{' '}
-                  per bill
+                  per bill — tap references below to compare your stack.
                 </div>
-
-                <div className={statCardClass}>
-                  <span className={accentBar('from-yellow-400', 'to-emerald-700/40')} />
-                  <div className="flex gap-3 md:gap-4">
-                    <span
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-yellow-500/15 text-xl ring-1 ring-yellow-400/25 md:h-12 md:w-12"
-                      aria-hidden
-                    >
-                      ↕️
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-200/85">
-                        Height
-                      </p>
-                      <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
-                        {physics.totalHeightM < 1
-                          ? `${(physics.totalHeightM * 100).toFixed(1)} cm`
-                          : `${physics.totalHeightM.toFixed(2)} m`}
-                      </p>
-                      <p className="mt-2 text-sm leading-relaxed text-zinc-300">{hComp.line}</p>
-                      <p className="mt-1.5 text-xs leading-snug text-zinc-500">{hComp.detail}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className={statCardClass}>
-                  <span className={accentBar('from-emerald-400', 'to-emerald-700/40')} />
-                  <div className="flex gap-3 md:gap-4">
-                    <span
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-xl ring-1 ring-emerald-400/20 md:h-12 md:w-12"
-                      aria-hidden
-                    >
-                      ▦
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-200/85">
-                        Area covered
-                      </p>
-                      <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
-                        {physics.totalGroundAreaM2 < 10_000
-                          ? `${physics.totalGroundAreaM2.toFixed(1)} m²`
-                          : `${(physics.totalGroundAreaM2 / 1_000_000).toFixed(3)} km²`}
-                      </p>
-                      <p className="mt-2 text-sm leading-relaxed text-zinc-300">{aComp.line}</p>
-                      <p className="mt-1.5 text-xs leading-snug text-zinc-500">{aComp.detail}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className={statCardClass}>
-                  <span className={accentBar('from-sky-400', 'to-indigo-700/40')} />
-                  <div className="flex gap-3 md:gap-4">
-                    <span
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-xl ring-1 ring-sky-400/25 md:h-12 md:w-12"
-                      aria-hidden
-                    >
-                      ⬚
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-sky-200/85">
-                        Volume
-                      </p>
-                      <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
-                        {physics.volumeM3 < 1
-                          ? `${(physics.volumeM3 * 1_000_000).toFixed(0)} cm³`
-                          : `${physics.volumeM3.toFixed(3)} m³`}
-                      </p>
-                      <p className="mt-2 text-sm leading-relaxed text-zinc-300">{vComp.line}</p>
-                      <p className="mt-1.5 text-xs leading-snug text-zinc-500">{vComp.detail}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className={statCardClass}>
-                  <span className={accentBar('from-violet-400', 'to-fuchsia-700/40')} />
-                  <div className="flex gap-3 md:gap-4">
-                    <span
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-xl ring-1 ring-violet-400/25 md:h-12 md:w-12"
-                      aria-hidden
-                    >
-                      ⚖️
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-200/85">
-                        Weight
-                      </p>
-                      <p className="display-font mt-1 text-xl font-extrabold tabular-nums tracking-tight text-white sm:text-2xl md:text-3xl">
-                        {physics.weightKg < 1000
-                          ? `${physics.weightKg.toFixed(1)} kg`
-                          : `${(physics.weightKg / 1000).toFixed(2)} t`}
-                      </p>
-                      <p className="mt-2 text-sm leading-relaxed text-zinc-300">{wComp.line}</p>
-                      <p className="mt-1.5 text-xs leading-snug text-zinc-500">{wComp.detail}</p>
-                    </div>
-                  </div>
-                </div>
+                <InteractiveScaleStats physics={physics} />
               </div>
             )}
 
@@ -295,10 +182,16 @@ const ScaleComparisonOverlay = ({
                     </span>{' '}
                     <span className="text-zinc-500">USD</span>
                     <span className="block text-xs text-zinc-500 md:inline md:before:content-['_·_']">
-                      rate ~1 USD ≈ 3.1 TND
+                      rate ~1 USD ≈ 3.1 TND · max amount in app is 1M TND
                     </span>
                   </p>
                 </div>
+
+                <BuyingPowerGame buyRows={buyRows} amountUsd={amountUsd} />
+
+                <p className="text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+                  Full list (reference)
+                </p>
 
                 {buyRows.length === 0 ? (
                   <p className="text-center text-sm text-zinc-500">

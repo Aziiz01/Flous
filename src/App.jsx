@@ -10,7 +10,7 @@ import ThreeMoneyScene from './components/ThreeMoneyScene'
 import { DEFAULT_DENOMINATION, DENOMINATIONS } from './data/denominations'
 import { formatNumber, parseFormattedNumber } from './utils/format'
 
-const MAX_AMOUNT = 9_999_999_999
+const MAX_AMOUNT = 1_000_000
 
 const getInitialStateFromUrl = () => {
   const params = new URLSearchParams(window.location.search)

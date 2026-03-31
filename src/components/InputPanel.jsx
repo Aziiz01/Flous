@@ -24,13 +24,15 @@ const InputPanel = ({
 
       <div className="grid min-w-0 gap-3 md:grid-cols-[1.15fr_0.75fr_auto_auto] md:items-end">
         <label className="min-w-0 space-y-1.5">
-          <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-500/90">Amount</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-500/90">
+            Amount <span className="font-normal text-emerald-600/90">(max 1M TND)</span>
+          </span>
           <input
             value={amountInput}
             onChange={(event) => setAmountInput(event.target.value)}
             inputMode="numeric"
-            placeholder="1,000,000"
-            title="Whole TND; rounds up to full bills"
+            placeholder="e.g. 500,000"
+            title="Whole TND, maximum 1,000,000; rounds up to full bills"
             aria-label="Amount in Tunisian dinar"
             className="money-glow w-full min-w-0 rounded-xl border border-emerald-600/35 bg-emerald-950/50 px-3 py-2.5 text-base font-semibold text-emerald-50 outline-none transition placeholder:text-emerald-700 focus:border-yellow-500/55 focus:ring-2 focus:ring-yellow-500/20 sm:py-3 md:text-lg"
           />

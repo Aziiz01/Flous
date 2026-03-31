@@ -14,12 +14,12 @@ All project code, assets, and documentation in this repository were created by M
 
 ## Features
 
-- **Amount & denomination** — Enter a TND amount and pick a note denomination (bill count is computed from the amount). On first load with no `amount` query parameter, the amount field is **empty** so nothing animates until you choose **Visualize** (default note is **20 TND**).
+- **Amount & denomination** — Enter up to **1,000,000 TND** and pick **10 / 20 / 50 TND** notes (bill count is computed from the amount). On first load with no `amount` query parameter, the amount field is **empty** until you choose **Visualize** (default note is **20 TND**).
 - **3D stacking** — Full-screen money scene: bills fall into stacks; orbit the view when the run finishes.
 - **Large amounts** — All runs now keep the falling-bill animation for visual continuity.
 - **Skip waiting** — Optional control to finish the animation immediately and show full stacks.
-- **Scale insights** — Height, ground area, volume, and weight comparisons using US note dimensions as a model (see in-app copy).
-- **Purchasing power (estimate)** — Illustrative “what could this buy?” list using a rough TND→USD rate (entertainment / education only, not financial advice).
+- **Scale insights** — Interactive comparisons (pick a reference landmark; dual bars show your stack vs the reference) using US note dimensions as a model.
+- **Purchasing power (estimate)** — Mini **guessing game** plus a reference list; rough TND→USD rate (entertainment / education only, not financial advice).
 - **Feedback** — Rate-project flow with EmailJS (configure your own keys in `src/config/emailjs.js`).
 - **URL state** — Shareable links via `amount` and `denom` query parameters.
 
